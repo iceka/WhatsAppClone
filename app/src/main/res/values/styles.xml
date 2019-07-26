@@ -13,4 +13,10 @@
         <item name="titleTextColor">#FFFF</item>
     </style>
 
+    <style name="TabLayoutTextStyle">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
 </resources>

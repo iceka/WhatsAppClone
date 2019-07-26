@@ -34,6 +34,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/tv_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
@@ -44,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                tools:text="7/13/19" />
+                android:text="7/13/19" />
 
         </LinearLayout>
 
