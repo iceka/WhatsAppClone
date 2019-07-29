@@ -34,10 +34,15 @@ public class ChatTabFragment extends Fragment {
         chatArrayList.add(new Chat("Teteh", "Heeh ngke we mun aya", R.mipmap.ic_launcher));
         chatArrayList.add(new Chat("Imam", "I love you beybeh", R.mipmap.ic_launcher));
         chatArrayList.add(new Chat("My Lovely", "I miss you", R.mipmap.ic_launcher));
+        chatArrayList.add(new Chat("My Lovely", "I miss you", R.mipmap.ic_launcher));
+        chatArrayList.add(new Chat("My Mom", "Imam ker dimana keneh?", R.mipmap.ic_launcher));
+        chatArrayList.add(new Chat("Teteh", "Heeh ngke we mun aya", R.mipmap.ic_launcher));
+        chatArrayList.add(new Chat("Imam", "I love you beybeh", R.mipmap.ic_launcher));
+        chatArrayList.add(new Chat("My Lovely", "I miss you", R.mipmap.ic_launcher));
 
         ChatAdapter adapter = new ChatAdapter(getActivity(), chatArrayList);
         ListView listView = (ListView) rootView.findViewById(R.id.chat_list);
-        listView.setAdapter(adapter);
+//        listView.setAdapter(adapter);
 
         return rootView;
     }

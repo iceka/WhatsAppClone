@@ -16,7 +16,7 @@ public class CameraTabFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_camera_tab, container, false);
+        View rootView = inflater.inflate(R.layout.activity_camera, container, false);
 
         return rootView;
     }
