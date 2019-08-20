@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".WelcomeActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="Welcome to WhatsApp"
+        android:textColor="#00897b"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/welcome_screen_image" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/btn_agree_tos"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:text="@string/term_of_service" />
+
+    <Button
+        android:id="@+id/btn_agree_tos"
+        android:layout_width="wrap_content"
+        android:layout_height="34dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:background="#25d366"
+        android:paddingLeft="70dp"
+        android:paddingRight="70dp"
+        android:text="Agree and continue"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white" />
+</RelativeLayout>

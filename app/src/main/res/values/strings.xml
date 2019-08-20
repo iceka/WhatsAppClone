@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">WhatsApp Clone</string>
+    <string name="term_of_service">Read our Privacy Policy. Tap "Agree and continue" to accept the Terms of Service.</string>
 </resources>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp"
+    tools:context=".PhoneVerifyActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_input_number"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:theme="@style/MyToolbarTheme">
+
+
+        <TextView
+            android:id="@+id/toolbar_title_input_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Verify +6285814993643"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:textColor="#00897b" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_input_number"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:gravity="center"
+        tools:text="Waiting to automatically detect an SMS sent to +6285814993643. Wrong number?" />
+
+    <EditText
+        android:id="@+id/et_verification_code"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_contoh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_verification_code"
+        android:layout_centerHorizontal="true"
+        android:text="Enter 6-digit code" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_contoh"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:drawableLeft="@drawable/ic_chat_black_24dp"
+        android:drawablePadding="8dp"
+        android:text="Resend SMS"
+        android:textColor="#26A69A" />
+
+    <Button
+        android:id="@+id/bt_next_main"
+        android:layout_width="wrap_content"
+        android:layout_height="34dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="16dp"
+        android:background="#25d366"
+        android:text="next"
+        android:textColor="@android:color/white" />
+
+</RelativeLayout>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/avatar_user_contact"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerVertical="true"
+        app:civ_border_width=".5dp"
+        tools:src="@mipmap/ic_launcher" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@id/avatar_user_contact"
+        android:layout_toRightOf="@id/avatar_user_contact"
+        android:orientation="vertical"
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp"
+        android:paddingEnd="8dp"
+        android:paddingRight="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_username_contact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                tools:text="John Snow" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="MOBILE" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="top"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_status_contact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                tools:text="Busy" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

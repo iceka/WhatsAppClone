@@ -13,6 +13,8 @@ import android.widget.Toast;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.iceka.whatsappclone.adapters.TabAdapter;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
     private AppBarLayout mAppBarLayout;
 
     private FloatingActionButton mFab;
+
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +63,12 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) layout.getLayoutParams();
         layoutParams.weight = 0.5f;
         layout.setLayoutParams(layoutParams);
+
+
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+
+        Toast.makeText(this, "display name nya adalah : " + mFirebaseUser.getDisplayName(), Toast.LENGTH_LONG).show();
 
 
 //        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -193,6 +204,23 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
 
             }
         });

@@ -6,6 +6,11 @@ public class Chat {
     private String message;
     private int imageResourceId;
 
+    public Chat(String username, String message) {
+        this.username = username;
+        this.message = message;
+    }
+
     public Chat(String username, String message, int imageResourceId) {
         this.username = username;
         this.message = message;
