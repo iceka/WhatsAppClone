@@ -4,17 +4,16 @@ public class Chat {
 
     private String username;
     private String message;
-    private int imageResourceId;
+    private String senderUid;
+    private String receiverUid;
 
-    public Chat(String username, String message) {
-        this.username = username;
-        this.message = message;
+    public Chat() {
     }
 
-    public Chat(String username, String message, int imageResourceId) {
-        this.username = username;
+    public Chat(String message, String senderUid, String receiverUid) {
         this.message = message;
-        this.imageResourceId = imageResourceId;
+        this.senderUid = senderUid;
+        this.receiverUid = receiverUid;
     }
 
     public String getUsername() {
@@ -33,11 +32,20 @@ public class Chat {
         this.message = message;
     }
 
-    public int getImageResourceId() {
-        return imageResourceId;
+    public String getSenderUid() {
+        return senderUid;
     }
 
-    public void setImageResourceId(int imageResourceId) {
-        this.imageResourceId = imageResourceId;
+    public void setSenderUid(String senderUid) {
+        this.senderUid = senderUid;
     }
+
+    public String getReceiverUid() {
+        return receiverUid;
+    }
+
+    public void setReceiverUid(String receiverUid) {
+        this.receiverUid = receiverUid;
+    }
+
 }

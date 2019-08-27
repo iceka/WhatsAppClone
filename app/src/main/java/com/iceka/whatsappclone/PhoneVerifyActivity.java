@@ -72,16 +72,14 @@ public class PhoneVerifyActivity extends AppCompatActivity {
 
         mEtCode = findViewById(R.id.et_verification_code);
         mBtNext = findViewById(R.id.bt_next_main);
+        mEtCode.requestFocus();
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
-//        mDatabaseReference = mFirebaseDatabase.getReference("users");
-//        mDatabaseReference.child(mFirebaseUser.getUid()).setValue("user_class");
-
         phoneNumber = getIntent().getStringExtra("phonenumber");
-        Toast.makeText(this, "phone number : " + phoneNumber, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "phone number : " + phoneNumber, Toast.LENGTH_SHORT).show();
         sendVerificationCode(phoneNumber);
 
         mBtNext.setOnClickListener(new View.OnClickListener() {

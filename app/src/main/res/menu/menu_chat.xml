@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_video_call"
+        android:icon="@drawable/ic_videocam_black_24dp"
+        android:orderInCategory="1"
+        android:title="Video Call"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_phone_call"
+        android:icon="@drawable/fui_ic_phone_white_24dp"
+        android:orderInCategory="2"
+        android:title="Phone Call"
+        app:showAsAction="ifRoom" />
+
+</menu>

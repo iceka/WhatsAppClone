@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -69,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
         Toast.makeText(this, "display name nya adalah : " + mFirebaseUser.getDisplayName(), Toast.LENGTH_LONG).show();
-
 
 //        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 //            @Override
@@ -143,6 +143,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fabSettings() {
+        if (mViewPager.getCurrentItem() == 1) {
+            mFab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(MainActivity.this, ContactActivity.class));
+                }
+            });
+        }
+
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -159,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 Toast.makeText(MainActivity.this, "view 1", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(MainActivity.this, ContactActivity.class));
                             }
                         });
                         break;

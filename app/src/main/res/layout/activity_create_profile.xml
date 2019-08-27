@@ -8,21 +8,59 @@
     android:padding="16dp"
     tools:context=".CreateProfileActivity">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/img_avatar_create"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
-        tools:src="@mipmap/ic_launcher" />
-
-    <EditText
-        android:id="@+id/et_create_profile_username"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/img_avatar_create"
-        android:hint="Input Username"
-        android:inputType="text" />
+        android:layout_below="@id/tv_etc"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_create_profile_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:hint="Input Username"
+            android:inputType="text" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_avatar_create"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_camera_alt_24dp"
+            app:civ_circle_background_color="#E0E0E0" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_etc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_input_number"
+        android:layout_centerHorizontal="true"
+        android:text="Please provide your name and an optional profile photoUrl" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_input_number"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:theme="@style/MyToolbarTheme">
+
+
+        <TextView
+            android:id="@+id/toolbar_title_input_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Verify your phone number"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:textColor="#00897b" />
+
+    </androidx.appcompat.widget.Toolbar>
+
 
     <Button
         android:id="@+id/bt_next_main"

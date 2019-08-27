@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentEnd="true"
+    android:layout_alignParentRight="true"
+    android:layout_marginStart="30dp"
+    android:layout_marginLeft="30dp"
+    android:background="@drawable/bubble_outgoing">
+
+    <TextView
+        android:id="@+id/tv_chat_outgoing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:layout_toLeftOf="@id/tv_time_chat_outgoing"
+        android:text="in adalah text nya bos akhirnng nih"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/tv_time_chat_outgoing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="8dp"
+        android:text="10:10 PM"
+        android:textSize="12sp" />
+
+
+</RelativeLayout>

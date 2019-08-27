@@ -13,15 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.iceka.whatsappclone.R;
-import com.iceka.whatsappclone.adapters.ChatAdapterRV;
-import com.iceka.whatsappclone.models.Chat;
 
 import java.util.ArrayList;
 
 public class ChatTabFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
-    private ChatAdapterRV mAdapter;
+//    private ChatAdapterRV mAdapter;
 
     @Nullable
     @Override
@@ -30,26 +28,26 @@ public class ChatTabFragment extends Fragment {
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_chat);
 
-        final ArrayList<Chat> chatArrayList = new ArrayList<Chat>();
-        chatArrayList.add(new Chat("My Mom", "Imam ker dimana keneh?", R.mipmap.ic_launcher));
-        chatArrayList.add(new Chat("Teteh", "Heeh ngke we mun aya", R.mipmap.ic_launcher));
-        chatArrayList.add(new Chat("Imam", "I love you beybeh", R.mipmap.ic_launcher));
-        chatArrayList.add(new Chat("My Lovely", "I miss you", R.mipmap.ic_launcher));
-        chatArrayList.add(new Chat("My Mom", "Imam ker dimana keneh?", R.mipmap.ic_launcher));
-        chatArrayList.add(new Chat("Teteh", "Heeh ngke we mun aya", R.mipmap.ic_launcher));
-        chatArrayList.add(new Chat("Imam", "I love you beybeh", R.mipmap.ic_launcher));
-        chatArrayList.add(new Chat("My Lovely", "I miss you", R.mipmap.ic_launcher));
-        chatArrayList.add(new Chat("My Lovely", "I miss you", R.mipmap.ic_launcher));
-        chatArrayList.add(new Chat("My Mom", "Imam ker dimana keneh?", R.mipmap.ic_launcher));
-        chatArrayList.add(new Chat("Teteh", "Heeh ngke we mun aya", R.mipmap.ic_launcher));
-        chatArrayList.add(new Chat("Imam", "I love you beybeh", R.mipmap.ic_launcher));
-        chatArrayList.add(new Chat("My Lovely", "I miss you", R.mipmap.ic_launcher));
+//        final ArrayList<Chat> chatArrayList = new ArrayList<Chat>();
+//        chatArrayList.add(new Chat("My Mom", "Imam ker dimana keneh?", R.mipmap.ic_launcher));
+//        chatArrayList.add(new Chat("Teteh", "Heeh ngke we mun aya", R.mipmap.ic_launcher));
+//        chatArrayList.add(new Chat("Imam", "I love you beybeh", R.mipmap.ic_launcher));
+//        chatArrayList.add(new Chat("My Lovely", "I miss you", R.mipmap.ic_launcher));
+//        chatArrayList.add(new Chat("My Mom", "Imam ker dimana keneh?", R.mipmap.ic_launcher));
+//        chatArrayList.add(new Chat("Teteh", "Heeh ngke we mun aya", R.mipmap.ic_launcher));
+//        chatArrayList.add(new Chat("Imam", "I love you beybeh", R.mipmap.ic_launcher));
+//        chatArrayList.add(new Chat("My Lovely", "I miss you", R.mipmap.ic_launcher));
+//        chatArrayList.add(new Chat("My Lovely", "I miss you", R.mipmap.ic_launcher));
+//        chatArrayList.add(new Chat("My Mom", "Imam ker dimana keneh?", R.mipmap.ic_launcher));
+//        chatArrayList.add(new Chat("Teteh", "Heeh ngke we mun aya", R.mipmap.ic_launcher));
+//        chatArrayList.add(new Chat("Imam", "I love you beybeh", R.mipmap.ic_launcher));
+//        chatArrayList.add(new Chat("My Lovely", "I miss you", R.mipmap.ic_launcher));
 
-        mAdapter = new ChatAdapterRV(getActivity(), chatArrayList);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setAdapter(mAdapter);
+//        mAdapter = new ChatAdapterRV(getActivity(), chatArrayList);
+//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+//        mRecyclerView.setLayoutManager(layoutManager);
+//        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+//        mRecyclerView.setAdapter(mAdapter);
 
         return rootView;
     }

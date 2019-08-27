@@ -38,6 +38,8 @@ public class InputPhoneNumberActivity extends AppCompatActivity {
         mCountryCode = findViewById(R.id.et_country_code);
         mNext = findViewById(R.id.bt_next_input_number);
 
+        mCountryCode.requestFocus();
+
 
         setSupportActionBar(mToolbar);
         mTitle.setText(mToolbar.getTitle());
@@ -48,7 +50,7 @@ public class InputPhoneNumberActivity extends AppCompatActivity {
                 number = "+" + mCountryCode.getText().toString() + mEtPhoneNumber.getText().toString();
 
                 showDialog();
-                Toast.makeText(InputPhoneNumberActivity.this, "bisa di click: " + number, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(InputPhoneNumberActivity.this, "bisa di click: " + number, Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -38,11 +38,11 @@ public class ChatAdapterRV extends RecyclerView.Adapter<ChatAdapterRV.MyViewHold
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Chat chat = chatList.get(position);
 
-        holder.username.setText(chat.getUsername());
-        holder.message.setText(chat.getMessage());
-        Glide.with(mContext)
-                .load(chat.getImageResourceId())
-                .into(holder.avatar);
+//        holder.username.setText(chat.getUsername());
+//        holder.message.setText(chat.getMessage());
+//        Glide.with(mContext)
+//                .load(chat.getImageResourceId())
+//                .into(holder.avatar);
     }
 
     @Override
