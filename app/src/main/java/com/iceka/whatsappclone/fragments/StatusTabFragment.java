@@ -36,7 +36,6 @@ public class StatusTabFragment extends Fragment {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
-        Toast.makeText(getActivity(), "ini adalah nama nya: " + mFirebaseUser.getPhotoUrl(), Toast.LENGTH_SHORT).show();
         Glide.with(this)
                 .load(mFirebaseUser.getPhotoUrl())
                 .into(avatar);

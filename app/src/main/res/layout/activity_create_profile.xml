@@ -16,14 +16,6 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/et_create_profile_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:hint="Input Username"
-            android:inputType="text" />
-
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/img_avatar_create"
             android:layout_width="60dp"
@@ -31,6 +23,14 @@
             android:layout_gravity="center"
             android:src="@drawable/ic_camera_alt_24dp"
             app:civ_circle_background_color="#E0E0E0" />
+
+        <EditText
+            android:id="@+id/et_create_profile_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:hint="Input Username"
+            android:inputType="text" />
 
 
     </LinearLayout>

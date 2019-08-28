@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
-        Toast.makeText(this, "display name nya adalah : " + mFirebaseUser.getDisplayName(), Toast.LENGTH_LONG).show();
 
 //        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 //            @Override

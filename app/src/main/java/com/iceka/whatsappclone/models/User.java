@@ -1,5 +1,7 @@
 package com.iceka.whatsappclone.models;
 
+import java.util.List;
+
 public class User {
 
     private String uid;
@@ -7,6 +9,7 @@ public class User {
     private String phone;
     private String photoUrl;
     private String about;
+    private List<String> conversation;
 
     public User() {
     }
@@ -17,6 +20,10 @@ public class User {
         this.phone = phone;
         this.photoUrl = photoUrl;
         this.about = about;
+    }
+
+    public User(List<String> conversation) {
+        this.conversation = conversation;
     }
 
     public String getUid() {
@@ -57,5 +64,13 @@ public class User {
 
     public void setAbout(String about) {
         this.about = about;
+    }
+
+    public List<String> getConversation() {
+        return conversation;
+    }
+
+    public void setConversation(List<String> conversation) {
+        this.conversation = conversation;
     }
 }

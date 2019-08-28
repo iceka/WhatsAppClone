@@ -1,5 +1,7 @@
 package com.iceka.whatsappclone.models;
 
+import java.util.List;
+
 public class Chat {
 
     private String username;

@@ -30,6 +30,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.iceka.whatsappclone.adapters.ChatRoomAdapter;
 import com.iceka.whatsappclone.models.Chat;
+import com.iceka.whatsappclone.models.Conversation;
 import com.iceka.whatsappclone.models.User;
 
 import java.util.ArrayList;
@@ -45,9 +46,8 @@ public class ChatFragment extends Fragment {
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
     private DatabaseReference mDatabaseReference;
-    private ChildEventListener mChildEventListener;
+    private DatabaseReference mConversationReference;
 
-    private User mUser;
     private String id;
     private String userUid;
     private String chatId;
@@ -67,17 +67,9 @@ public class ChatFragment extends Fragment {
         return fragment;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        Bundle bundle = getArguments();
-        mUser = bundle.getParcelable(EXTRAS_USER);
-    }
-
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
         mMessageText = view.findViewById(R.id.et_message_chat);
@@ -103,10 +95,9 @@ public class ChatFragment extends Fragment {
         }
 
         mDatabaseReference = mFirebaseDatabase.getReference().child("chats").child(chatId);
+        mConversationReference = mFirebaseDatabase.getReference().child("conversation").child(mFirebaseUser.getUid());
 
-//        adapters = new ChatRoomAdapter(getActivity(), R.layout.item_chat_outgoing, chats);
-//        listView.setAdapter(adapters);
-
+//        final DatabaseReference addConversation = mFirebaseDatabase.getReference().child("users").child(mFirebaseUser.getUid()).child("conversation");
 
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,41 +105,53 @@ public class ChatFragment extends Fragment {
                 Chat chat = new Chat(mMessageText.getText().toString(), mFirebaseUser.getUid(), id);
                 mDatabaseReference.push().setValue(chat);
                 mMessageText.setText("");
+
+//                mConversationReference.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                            if (mConversationReference.child(chatId).toString() == chatId){
+//                                Conversation conversation = new Conversation(mFirebaseUser.getUid(), id);
+//                                mConversationReference.child(chatId).setValue(conversation);
+//                                Toast.makeText(getContext(), "Aneh", Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                Toast.makeText(getContext(), "Teuing", Toast.LENGTH_SHORT).show();
+//                            }
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                    }
+//                });
+                Conversation conversation = new Conversation(mFirebaseUser.getUid(), id);
+                mConversationReference.child(chatId).setValue(conversation);
+
+//                addConversation.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        addConversation.removeEventListener(this);
+//                        List<String> list = new ArrayList<>();
+//                        if (dataSnapshot.getValue() == null) {
+//                            list.add(chatId);
+//                        } else {
+//                            if (dataSnapshot.getValue() instanceof List && ((List) dataSnapshot.getValue()).size() > 0) {
+//                                list = (List<String>) dataSnapshot.getValue();
+//                                list.add(chatId);
+//                            }
+//                        }
+//
+//                        addConversation.setValue(list);
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                    }
+//                });
+
             }
         });
-//        loadChats();
-
-//        mChildEventListener = new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                Chat chat = dataSnapshot.getValue(Chat.class);
-//                chatList.add(chat);
-//
-//                Toast.makeText(getContext(), "bisa : " + chatList, Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        };
-//        mDatabaseReference.addChildEventListener(mChildEventListener);
-
 
         mDatabaseReference.addChildEventListener(new ChildEventListener() {
             @Override
@@ -180,31 +183,9 @@ public class ChatFragment extends Fragment {
             }
         });
 
-
-//        mDatabaseReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    Chat chat = snapshot.getValue(Chat.class);
-//                    chatList.add(chat);
-//                }
-//                adapters = new ChatRoomAdapter(getContext(), chatList);
-//                mRecyclerView.setAdapter(adapters);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-
         return view;
     }
 
-    private boolean messageFromCurrentUser(Chat chat) {
-        String currentUid = mFirebaseUser.getUid();
-        return currentUid.equalsIgnoreCase(chat.getSenderUid());
-    }
 
     private void showSendButton() {
         mFab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_send_black_24dp));
@@ -215,88 +196,5 @@ public class ChatFragment extends Fragment {
         mFab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_keyboard_voice_black_24dp));
         mFab.setTag("mic_image");
     }
-
-//    private FirebaseRecyclerAdapter<Chat, RecyclerView.ViewHolder> mAdapter;
-//
-//    private void loadChats() {
-//
-//        FirebaseRecyclerOptions<Chat> options = new FirebaseRecyclerOptions.Builder<Chat>()
-//                .setQuery(mDatabaseReference, Chat.class)
-//                .build();
-//
-//        mAdapter = new FirebaseRecyclerAdapter<Chat, RecyclerView.ViewHolder>(options) {
-//
-//            private final int TYPE_INCOMING = 1;
-//            private final int TYPE_OUTGOING = 2;
-//
-//            @Override
-//            protected void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i, @NonNull Chat chat) {
-//                if (messageFromCurrentUser(chat)) {
-//                    populateOutgoingViewHolder((OutgoingViewHolder) viewHolder, chat);
-//                } else {
-//                    populateIncomingViewHolder((IncomingViewHolder) viewHolder, chat);
-//                }
-//            }
-//
-//            @NonNull
-//            @Override
-//            public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//                View view;
-//                if (viewType == TYPE_INCOMING) {
-//                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_incoming, parent, false);
-//                    return new IncomingViewHolder(view);
-//                } else {
-//                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_outgoing, parent, false);
-//                    return new OutgoingViewHolder(view);
-//                }
-//            }
-//
-//            private void populateIncomingViewHolder(IncomingViewHolder viewHolder, Chat chat) {
-//                viewHolder.bindToMessage(chat);
-//            }
-//
-//            private void populateOutgoingViewHolder(OutgoingViewHolder viewHolder, Chat chat) {
-//                viewHolder.bindToMessage(chat);
-//            }
-//
-//            class IncomingViewHolder extends RecyclerView.ViewHolder {
-//                private TextView messages;
-//
-//                public IncomingViewHolder(@NonNull View itemView) {
-//                    super(itemView);
-//                    messages = itemView.findViewById(R.id.tv_chat_incoming);
-//                }
-//
-//                public void bindToMessage(Chat chat) {
-//                    messages.setText(chat.getMessage());
-//                }
-//            }
-//
-//            class OutgoingViewHolder extends RecyclerView.ViewHolder {
-//                private TextView messages;
-//
-//                public OutgoingViewHolder(@NonNull View itemView) {
-//                    super(itemView);
-//                    messages = itemView.findViewById(R.id.tv_chat_outgoing);
-//                }
-//
-//                public void bindToMessage(Chat chat) {
-//                    messages.setText(chat.getMessage());
-//                }
-//            }
-//
-//            @Override
-//            public int getItemViewType(int position) {
-//                super.getItemViewType(position);
-//                Chat chat = getItem(position);
-//                if (messageFromCurrentUser(chat)) {
-//                    return TYPE_OUTGOING;
-//                }
-//                return TYPE_INCOMING;
-//            }
-//        };
-//
-//        mRecyclerView.setAdapter(mAdapter);
-//    }
 
 }
