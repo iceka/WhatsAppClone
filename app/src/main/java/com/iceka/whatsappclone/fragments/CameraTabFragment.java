@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 import com.iceka.whatsappclone.R;
 import com.iceka.whatsappclone.utils.RunTimePermissions;
 
-public class CameraTabFragment extends Fragment implements SurfaceHolder.Callback, View.OnClickListener {
+public class CameraTabFragment extends Fragment {
 
     private RunTimePermissions mRuntimePermission;
 
@@ -41,26 +41,6 @@ public class CameraTabFragment extends Fragment implements SurfaceHolder.Callbac
 //        });
 
         return rootView;
-    }
-
-    @Override
-    public void surfaceCreated(SurfaceHolder surfaceHolder) {
-
-    }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-
-    }
-
-    @Override
-    public void onClick(View view) {
-
     }
 
     @Override

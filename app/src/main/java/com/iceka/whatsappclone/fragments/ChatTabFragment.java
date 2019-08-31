@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,18 +46,19 @@ public class ChatTabFragment extends Fragment {
     private String key;
 
     private List<User> userList = new ArrayList<>();
-    private List<Chat> chatList = new ArrayList<>();
     private List<Conversation> conversationList = new ArrayList<>();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.recycler_view, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_chat_tab, container, false);
 
-        mRecyclerView = rootView.findViewById(R.id.recycler_view_chat);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView = rootView.findViewById(R.id.recyvlerview_chat_tab);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -67,60 +69,74 @@ public class ChatTabFragment extends Fragment {
         mConversationReference = mFirebaseDatabase.getReference().child("conversation").child(mFirebaseUser.getUid());
         mUserReference = mFirebaseDatabase.getReference().child("users");
 
-        mConversationReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                key = dataSnapshot.getKey();
-                personId = dataSnapshot.child("chatWithId").getValue(String.class);
+//        mUserReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    User user = snapshot.getValue(User.class);
+//                    userList.add(user);
+//                }
+//                mAdapter = new ChatListAdapter(getActivity(), conversationList, userList);
+//                mRecyclerView.setAdapter(mAdapter);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
-                Query query = mUserReference.orderByKey().equalTo(personId);
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            User user = snapshot.getValue(User.class);
-                            userList.add(user);
+//        mConversationReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+////                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    Conversation conversation = dataSnapshot.getValue(Conversation.class);
+//                    conversationList.add(conversation);
+////                }
+//                mAdapter = new ChatListAdapter(getActivity(), conversationList, userList);
+//                mRecyclerView.setAdapter(mAdapter);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+
+        userList.clear();
+
+        mConversationReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                conversationList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Conversation conversation = snapshot.getValue(Conversation.class);
+                    conversationList.add(conversation);
+//                    conversationList.clear();
+
+                    key = snapshot.getKey();
+                    personId = snapshot.child("chatWithId").getValue(String.class);
+
+                    Query query = mUserReference.orderByKey().equalTo(personId);
+                    query.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                User user = snapshot.getValue(User.class);
+                                userList.add(user);
+                            }
+                            mAdapter = new ChatListAdapter(getActivity(), conversationList, userList);
+                            mRecyclerView.setAdapter(mAdapter);
+
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-                });
-
-                Query lastQuery = mChatReference.child(key).orderByKey().limitToLast(1);
-                lastQuery.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            Chat chat = snapshot.getValue(Chat.class);
-                            chatList.add(chat);
                         }
-                        mAdapter = new ChatListAdapter(getActivity(), chatList, userList);
-                        mRecyclerView.setAdapter(mAdapter);
-                    }
+                    });
+                }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
             }
 

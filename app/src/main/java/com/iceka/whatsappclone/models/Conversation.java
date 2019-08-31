@@ -6,14 +6,16 @@ public class Conversation {
     private String username;
     private String chatWithId;
     private String chatId;
+    private String lastMessage;
     private User user;
 
     public Conversation() {
     }
 
-    public Conversation(String userUid, String chatWithId) {
+    public Conversation(String userUid, String chatWithId, String lastMessage) {
         this.userUid = userUid;
         this.chatWithId = chatWithId;
+        this.lastMessage = lastMessage;
     }
 
     public User getUser() {
@@ -54,5 +56,13 @@ public class Conversation {
 
     public void setChatId(String chatId) {
         this.chatId = chatId;
+    }
+
+    public String getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
     }
 }

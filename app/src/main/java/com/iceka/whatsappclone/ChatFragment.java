@@ -75,9 +75,8 @@ public class ChatFragment extends Fragment {
         mMessageText = view.findViewById(R.id.et_message_chat);
         mFab = view.findViewById(R.id.fab_chat);
         mRecyclerView = view.findViewById(R.id.rv_chat);
-        ListView listView = view.findViewById(R.id.listview);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
@@ -102,7 +101,9 @@ public class ChatFragment extends Fragment {
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Chat chat = new Chat(mMessageText.getText().toString(), mFirebaseUser.getUid(), id);
+                String contoh = mMessageText.getText().toString();
+
+                Chat chat = new Chat(contoh, mFirebaseUser.getUid(), id);
                 mDatabaseReference.push().setValue(chat);
                 mMessageText.setText("");
 
@@ -124,8 +125,9 @@ public class ChatFragment extends Fragment {
 //
 //                    }
 //                });
-                Conversation conversation = new Conversation(mFirebaseUser.getUid(), id);
-                mConversationReference.child(chatId).setValue(conversation);
+                Conversation conversation = new Conversation(mFirebaseUser.getUid(), id, contoh);
+                mConversationReference.child(id).setValue(conversation);
+                Toast.makeText(getContext(), "ini text nya : " + contoh, Toast.LENGTH_SHORT).show();
 
 //                addConversation.addValueEventListener(new ValueEventListener() {
 //                    @Override
@@ -159,6 +161,7 @@ public class ChatFragment extends Fragment {
                 Chat chat = dataSnapshot.getValue(Chat.class);
                 chatList.add(chat);
                 adapters = new ChatRoomAdapter(getActivity(), chatList);
+                mRecyclerView.smoothScrollToPosition(chatList.size() - 1);
                 mRecyclerView.setAdapter(adapters);
             }
 

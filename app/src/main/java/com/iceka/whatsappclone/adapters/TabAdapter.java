@@ -23,14 +23,16 @@ public class TabAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        if (position == 0) {
-            return new CameraTabFragment();
-        } else if (position == 1) {
-            return new ChatTabFragment();
-        } else if (position == 2) {
-            return new StatusTabFragment();
-        } else {
-            return new CallsTabFragment();
+        switch (position) {
+            case 0:
+                return new CameraTabFragment();
+            case 1:
+                return new ChatTabFragment();
+            case 2:
+                return new StatusTabFragment();
+            default:
+                return new CallsTabFragment();
+
         }
     }
 

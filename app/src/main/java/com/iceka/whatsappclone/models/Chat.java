@@ -8,14 +8,34 @@ public class Chat {
     private String message;
     private String senderUid;
     private String receiverUid;
+    private int imageResourceId;
 
     public Chat() {
+    }
+
+    public Chat(String username, String message, int imageResourceId) {
+        this.username = username;
+        this.message = message;
+        this.imageResourceId = imageResourceId;
     }
 
     public Chat(String message, String senderUid, String receiverUid) {
         this.message = message;
         this.senderUid = senderUid;
         this.receiverUid = receiverUid;
+    }
+
+    public Chat(String username, String message) {
+        this.username = username;
+        this.message = message;
+    }
+
+    public int getImageResourceId() {
+        return imageResourceId;
+    }
+
+    public void setImageResourceId(int imageResourceId) {
+        this.imageResourceId = imageResourceId;
     }
 
     public String getUsername() {

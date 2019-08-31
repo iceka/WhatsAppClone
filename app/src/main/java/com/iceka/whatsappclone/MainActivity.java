@@ -39,26 +39,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mTabLayout = findViewById(R.id.tab_layout);
+        mViewPager = findViewById(R.id.viewpager);
 //        mFabBottom = (FloatingActionButton) findViewById(R.id.fab_bottom);
 //        mFabTop = (FloatingActionButton) findViewById(R.id.fab_top);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mAppBarLayout = (AppBarLayout) findViewById(R.id.appbar_layout);
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mToolbar = findViewById(R.id.toolbar);
+        mAppBarLayout = findViewById(R.id.appbar_layout);
+        mFab = findViewById(R.id.fab);
 
-//        if (mToolbar != null) {
-//            setSupportActionBar(mToolbar);
-//        }
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
+        }
         setSupportActionBar(mToolbar);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mTabAdapter = new TabAdapter(this, getSupportFragmentManager());
+        mViewPager.setOffscreenPageLimit(4);
         mViewPager.setAdapter(mTabAdapter);
         mViewPager.setCurrentItem(1);
+
         mTabLayout.setupWithViewPager(mViewPager);
         mTabLayout.getTabAt(0).setIcon(R.drawable.ic_camera_alt_white_24dp);
-
 
         LinearLayout layout = ((LinearLayout) ((LinearLayout) mTabLayout.getChildAt(0)).getChildAt(0));
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) layout.getLayoutParams();
@@ -69,75 +70,7 @@ public class MainActivity extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
-
-//        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//                if (position == 0) {
-//                    Toast.makeText(MainActivity.this, "contoh we", Toast.LENGTH_SHORT).show();
-//                    mFab.hide();
-//                    mToolbar.hideOverflowMenu();
-//                } else {
-//                    mFab.show();
-//                    fabSettings();
-//                    mFab.show();
-//                }
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//
-//            }
-//        });
         fabSettings();
-
-
-//        if (mViewPager.getCurrentItem() == 1) {
-//            mFabTop.hide();
-//            mFabBottom.setImageResource(R.drawable.ic_comment_white_24dp);
-//        }
-//        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-//            @Override
-//            public void onTabSelected(TabLayout.Tab tab) {
-//                int position = tab.getPosition();
-//                switch (position) {
-//                    case 0:
-//                        mFabTop.hide();
-//                        mFabBottom.hide();
-//                        break;
-//                    case 1:
-//                        mFabTop.hide();
-//                        mFabBottom.show();
-//                        mFabBottom.setImageResource(R.drawable.ic_comment_white_24dp);
-//                        break;
-//                    case 2:
-//                        mFabTop.show();
-//                        mFabBottom.show();
-//                        mFabBottom.setImageResource(R.drawable.ic_camera_alt_white_24dp);
-//                        break;
-//                    default:
-//                        mFabTop.hide();
-//                        mFabBottom.show();
-//                        mFabBottom.setImageResource(R.drawable.ic_phone_black_white_24dp);
-//                        break;
-//                }
-//            }
-//
-//            @Override
-//            public void onTabUnselected(TabLayout.Tab tab) {
-//
-//            }
-//
-//            @Override
-//            public void onTabReselected(TabLayout.Tab tab) {
-//
-//            }
-//        });
 
     }
 
@@ -213,23 +146,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
 
             }
         });

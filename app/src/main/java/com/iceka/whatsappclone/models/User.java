@@ -26,6 +26,11 @@ public class User {
         this.conversation = conversation;
     }
 
+    public User(String username, String message) {
+        this.username = username;
+        this.about = message;
+    }
+
     public String getUid() {
         return uid;
     }

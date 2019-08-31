@@ -32,7 +32,7 @@ public class StatusTabFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_status_tab, container, false);
         setHasOptionsMenu(true);
 
-        CircleImageView avatar = (CircleImageView) rootView.findViewById(R.id.avatar_user_status);
+        CircleImageView avatar = rootView.findViewById(R.id.avatar_user_status);
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
