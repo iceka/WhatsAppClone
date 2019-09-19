@@ -1,81 +1,102 @@
 package com.iceka.whatsappclone.models;
 
-import java.util.List;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class User {
+
+public class User implements Parcelable {
 
     private String uid;
     private String username;
     private String phone;
     private String photoUrl;
     private String about;
-    private List<String> conversation;
+    private Boolean online;
+    private long lastSeen;
 
     public User() {
     }
 
-    public User(String uid, String username, String phone, String photoUrl, String about) {
+    public User(String uid, String username, String phone, String photoUrl, String about, boolean online, long lastSeen) {
         this.uid = uid;
         this.username = username;
         this.phone = phone;
         this.photoUrl = photoUrl;
         this.about = about;
+        this.online = online;
+        this.lastSeen = lastSeen;
     }
 
-    public User(List<String> conversation) {
-        this.conversation = conversation;
+    protected User(Parcel in) {
+        this.uid = in.readString();
+        this.username = in.readString();
+        this.phone = in.readString();
+        this.photoUrl = in.readString();
+        this.about = in.readString();
+        this.online = in.readInt() == 1;
+        this.lastSeen = in.readLong();
     }
 
-    public User(String username, String message) {
-        this.username = username;
-        this.about = message;
+    @Override
+    public int describeContents() {
+        return 0;
     }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(this.uid);
+        parcel.writeString(this.username);
+        parcel.writeString(this.phone);
+        parcel.writeString(this.photoUrl);
+        parcel.writeString(this.about);
+        parcel.writeInt(this.online ? 1 : 0);
+        parcel.writeLong(this.lastSeen);
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public String getUid() {
         return uid;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
 
     public String getUsername() {
         return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPhone() {
         return phone;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
 
     public String getPhotoUrl() {
         return photoUrl;
     }
 
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
-    }
 
     public String getAbout() {
         return about;
     }
 
-    public void setAbout(String about) {
-        this.about = about;
+
+    public Boolean isOnline() {
+        return online;
     }
 
-    public List<String> getConversation() {
-        return conversation;
+
+    public long getLastSeen() {
+        return lastSeen;
     }
 
-    public void setConversation(List<String> conversation) {
-        this.conversation = conversation;
-    }
+
 }

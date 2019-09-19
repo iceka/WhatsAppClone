@@ -1,5 +1,6 @@
 package com.iceka.whatsappclone;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
@@ -16,7 +17,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.iceka.whatsappclone.adapters.TabAdapter;
+
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
+    private DatabaseReference userReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
+
+        userReference = FirebaseDatabase.getInstance().getReference().child("users").child(mFirebaseUser.getUid());
 
         fabSettings();
 
@@ -151,7 +162,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        userReference.child("online").setValue(true);
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        long lastSeen = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+        userReference.child("online").setValue(false);
+        userReference.child("lastSeen").setValue(lastSeen);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -92,8 +92,13 @@ public class PhoneVerifyActivity extends AppCompatActivity {
     }
 
     private void verifyCode(String code) {
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
-        signInWithCredential(credential);
+        try {
+            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
+            signInWithCredential(credential);
+        } catch (Exception e) {
+            Toast.makeText(this, "Verification code wrong", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void signInWithCredential(PhoneAuthCredential credential) {

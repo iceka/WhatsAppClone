@@ -1,13 +1,13 @@
 package com.iceka.whatsappclone;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,8 +17,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,17 +25,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.iceka.whatsappclone.adapters.ChatRoomAdapter;
 import com.iceka.whatsappclone.models.Chat;
 import com.iceka.whatsappclone.models.Conversation;
-import com.iceka.whatsappclone.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import static com.firebase.ui.auth.AuthUI.getApplicationContext;
-import static com.iceka.whatsappclone.ChatRoomActivity.EXTRAS_USER;
 import static com.iceka.whatsappclone.ChatRoomActivity.idFromContact;
 
 public class ChatFragment extends Fragment {
@@ -45,16 +40,18 @@ public class ChatFragment extends Fragment {
     private FirebaseDatabase mFirebaseDatabase;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
-    private DatabaseReference mDatabaseReference;
+    private DatabaseReference mChatReference;
     private DatabaseReference mConversationReference;
 
     private String id;
     private String userUid;
     private String chatId;
+    private int unreadCount = 0;
 
     private EditText mMessageText;
     private FloatingActionButton mFab;
     private RecyclerView mRecyclerView;
+    private ImageView mAttachPict;
 
     private ChatRoomAdapter adapters;
 
@@ -75,6 +72,7 @@ public class ChatFragment extends Fragment {
         mMessageText = view.findViewById(R.id.et_message_chat);
         mFab = view.findViewById(R.id.fab_chat);
         mRecyclerView = view.findViewById(R.id.rv_chat);
+        mAttachPict = view.findViewById(R.id.img_attach_picture);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
@@ -93,69 +91,58 @@ public class ChatFragment extends Fragment {
             chatId = id + userUid;
         }
 
-        mDatabaseReference = mFirebaseDatabase.getReference().child("chats").child(chatId);
-        mConversationReference = mFirebaseDatabase.getReference().child("conversation").child(mFirebaseUser.getUid());
+        mChatReference = mFirebaseDatabase.getReference().child("chats").child(chatId);
+        mConversationReference = mFirebaseDatabase.getReference().child("conversation");
 
-//        final DatabaseReference addConversation = mFirebaseDatabase.getReference().child("users").child(mFirebaseUser.getUid()).child("conversation");
+        mMessageText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length() == 0) {
+                    showSendButton();
+                    mAttachPict.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (editable.length() == 0) {
+                    showVoiceButton();
+                    mAttachPict.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String contoh = mMessageText.getText().toString();
-
-                Chat chat = new Chat(contoh, mFirebaseUser.getUid(), id);
-                mDatabaseReference.push().setValue(chat);
+//                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+//                dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+//                String timestamp = dateFormat.format(new Date()).toString();
+//                String timeStamp = String.valueOf(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()));
+                long timestamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+                Chat chat = new Chat(contoh, mFirebaseUser.getUid(), id, timestamp);
+                mChatReference.push().setValue(chat);
                 mMessageText.setText("");
 
-//                mConversationReference.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                            if (mConversationReference.child(chatId).toString() == chatId){
-//                                Conversation conversation = new Conversation(mFirebaseUser.getUid(), id);
-//                                mConversationReference.child(chatId).setValue(conversation);
-//                                Toast.makeText(getContext(), "Aneh", Toast.LENGTH_SHORT).show();
-//                            } else {
-//                                Toast.makeText(getContext(), "Teuing", Toast.LENGTH_SHORT).show();
-//                            }
-//
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                });
-                Conversation conversation = new Conversation(mFirebaseUser.getUid(), id, contoh);
-                mConversationReference.child(id).setValue(conversation);
-                Toast.makeText(getContext(), "ini text nya : " + contoh, Toast.LENGTH_SHORT).show();
+                unreadCount = unreadCount + 1;
+                Conversation conversationSender = new Conversation(mFirebaseUser.getUid(), id, contoh, timestamp);
+                Conversation conversationReceiver = new Conversation(id, mFirebaseUser.getUid(), contoh, timestamp, unreadCount);
 
-//                addConversation.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        addConversation.removeEventListener(this);
-//                        List<String> list = new ArrayList<>();
-//                        if (dataSnapshot.getValue() == null) {
-//                            list.add(chatId);
-//                        } else {
-//                            if (dataSnapshot.getValue() instanceof List && ((List) dataSnapshot.getValue()).size() > 0) {
-//                                list = (List<String>) dataSnapshot.getValue();
-//                                list.add(chatId);
-//                            }
-//                        }
-//
-//                        addConversation.setValue(list);
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                });
+                DatabaseReference senderReference = mConversationReference.child(mFirebaseUser.getUid()).child(id);
+                senderReference.setValue(conversationSender);
+                DatabaseReference receiverReference = mConversationReference.child(id).child(mFirebaseUser.getUid());
+                receiverReference.setValue(conversationReceiver);
 
             }
         });
 
-        mDatabaseReference.addChildEventListener(new ChildEventListener() {
+        mChatReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Chat chat = dataSnapshot.getValue(Chat.class);

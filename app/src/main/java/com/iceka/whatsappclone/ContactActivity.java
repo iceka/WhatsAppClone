@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.accessibility.AccessibilityEvent;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -14,6 +15,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.iceka.whatsappclone.adapters.ContactAdapter;
 import com.iceka.whatsappclone.models.User;
@@ -34,22 +36,30 @@ public class ContactActivity extends AppCompatActivity {
     private List<User> contactList = new ArrayList<>();
 
     @Override
+    public boolean dispatchPopulateAccessibilityEvent(AccessibilityEvent event) {
+        return super.dispatchPopulateAccessibilityEvent(event);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact);
 
         mRecyclerView = findViewById(R.id.recycler_view_contact);
 
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
         mDatabaseReference = mFirebaseDatabase.getReference().child("users");
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        Query myQuery = mDatabaseReference.orderByChild("username");
 
-        mDatabaseReference.addValueEventListener(new ValueEventListener() {
+
+        myQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -57,6 +67,7 @@ public class ContactActivity extends AppCompatActivity {
                     if (!user.getUid().equals(mFirebaseUser.getUid())) {
                         contactList.add(user);
                     }
+
                 }
                 mAdapter = new ContactAdapter(ContactActivity.this, contactList);
                 mRecyclerView.setAdapter(mAdapter);

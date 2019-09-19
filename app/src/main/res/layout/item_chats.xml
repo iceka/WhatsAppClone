@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/layout_user_chat"
-    android:layout_height="80dp"
+    android:background="?attr/selectableItemBackground"
+    android:layout_height="88dp"
     android:orientation="vertical"
     android:padding="8dp">
 
@@ -43,6 +44,7 @@
                 tools:text="John Snow" />
 
             <TextView
+                android:id="@+id/tv_chat_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
@@ -50,12 +52,11 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:gravity="top"
-            android:orientation="horizontal">
+            android:gravity="top">
 
             <TextView
                 android:id="@+id/tv_message"
@@ -64,8 +65,25 @@
                 android:maxLines="1"
                 tools:text="This is a message from John Snow " />
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/tv_unread_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/background_unread_chat"
+                tools:text="1" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height=".5dp"
+            android:background="@android:color/darker_gray" />
 
     </LinearLayout>
+
 
 </RelativeLayout>

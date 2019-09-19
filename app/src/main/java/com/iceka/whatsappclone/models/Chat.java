@@ -9,6 +9,7 @@ public class Chat {
     private String senderUid;
     private String receiverUid;
     private int imageResourceId;
+    private long timestamp;
 
     public Chat() {
     }
@@ -19,15 +20,11 @@ public class Chat {
         this.imageResourceId = imageResourceId;
     }
 
-    public Chat(String message, String senderUid, String receiverUid) {
+    public Chat(String message, String senderUid, String receiverUid, long timestamp) {
         this.message = message;
         this.senderUid = senderUid;
         this.receiverUid = receiverUid;
-    }
-
-    public Chat(String username, String message) {
-        this.username = username;
-        this.message = message;
+        this.timestamp = timestamp;
     }
 
     public int getImageResourceId() {
@@ -70,4 +67,11 @@ public class Chat {
         this.receiverUid = receiverUid;
     }
 
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 }

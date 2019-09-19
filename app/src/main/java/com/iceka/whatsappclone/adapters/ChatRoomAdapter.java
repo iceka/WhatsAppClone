@@ -114,27 +114,4 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     }
 
-//public class ChatRoomAdapter extends ArrayAdapter<Chat> {
-//
-//    private List<Chat> chatList;
-//    private Context mContext;
-//
-//    public ChatRoomAdapter(@NonNull Context context, int resource, List<Chat> chats) {
-//        super(context, resource, chats);
-//    }
-//
-//    @NonNull
-//    @Override
-//    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-//        if (convertView == null) {
-//            convertView = ((Activity)getContext()).getLayoutInflater().inflate(R.layout.item_chat_outgoing, parent, false);
-//        }
-//
-//        TextView message = convertView.findViewById(R.id.tv_chat_outgoing);
-//
-//        Chat chat = getItem(position);
-//        message.setText(chat.getMessage());
-//
-//        return convertView;
-//    }
 }

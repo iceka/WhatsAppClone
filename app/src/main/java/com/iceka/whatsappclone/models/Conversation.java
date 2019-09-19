@@ -8,14 +8,25 @@ public class Conversation {
     private String chatId;
     private String lastMessage;
     private User user;
+    private long timestamp;
+    private int unreadChatCount = 0;
 
     public Conversation() {
     }
 
-    public Conversation(String userUid, String chatWithId, String lastMessage) {
+    public Conversation(String userUid, String chatWithId, String lastMessage, long timestamp, int unreadChatCount) {
         this.userUid = userUid;
         this.chatWithId = chatWithId;
         this.lastMessage = lastMessage;
+        this.timestamp = timestamp;
+        this.unreadChatCount = unreadChatCount;
+    }
+
+    public Conversation(String userUid, String chatWithId, String lastMessage, long timestamp) {
+        this.userUid = userUid;
+        this.chatWithId = chatWithId;
+        this.lastMessage = lastMessage;
+        this.timestamp = timestamp;
     }
 
     public User getUser() {
@@ -64,5 +75,21 @@ public class Conversation {
 
     public void setLastMessage(String lastMessage) {
         this.lastMessage = lastMessage;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public int getUnreadChatCount() {
+        return unreadChatCount;
+    }
+
+    public void setUnreadChatCount(int unreadChatCount) {
+        this.unreadChatCount = unreadChatCount;
     }
 }

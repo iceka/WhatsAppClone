@@ -138,7 +138,7 @@ public class CreateProfileActivity extends AppCompatActivity {
                                             }
                                         }
                                     });
-                                    User user = new User(mFirebaseUser.getUid(), username, mFirebaseUser.getPhoneNumber(), uri.toString(), defaultProfileAbout);
+                                    User user = new User(mFirebaseUser.getUid(), username, mFirebaseUser.getPhoneNumber(), uri.toString(), defaultProfileAbout, true, 0);
                                     mDatabaseReference.setValue(user);
                                 }
                             });

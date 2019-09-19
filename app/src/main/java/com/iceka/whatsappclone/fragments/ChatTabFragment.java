@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,19 +23,23 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.iceka.whatsappclone.R;
 import com.iceka.whatsappclone.adapters.ChatListAdapter;
-import com.iceka.whatsappclone.models.Chat;
 import com.iceka.whatsappclone.models.Conversation;
 import com.iceka.whatsappclone.models.User;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class ChatTabFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mConversationReference;
-    private DatabaseReference mChatReference;
     private DatabaseReference mUserReference;
     private FirebaseAuth mAuth;
     private FirebaseUser mFirebaseUser;
@@ -55,88 +58,54 @@ public class ChatTabFragment extends Fragment {
 
         mRecyclerView = rootView.findViewById(R.id.recyvlerview_chat_tab);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(layoutManager);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
-
         mFirebaseUser = mAuth.getCurrentUser();
 
-        mChatReference = mFirebaseDatabase.getReference().child("chats");
         mConversationReference = mFirebaseDatabase.getReference().child("conversation").child(mFirebaseUser.getUid());
         mUserReference = mFirebaseDatabase.getReference().child("users");
 
-//        mUserReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    User user = snapshot.getValue(User.class);
-//                    userList.add(user);
-//                }
-//                mAdapter = new ChatListAdapter(getActivity(), conversationList, userList);
-//                mRecyclerView.setAdapter(mAdapter);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
+        Query myQuery = mConversationReference.orderByChild("timestamp");
 
-//        mConversationReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-////                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    Conversation conversation = dataSnapshot.getValue(Conversation.class);
-//                    conversationList.add(conversation);
-////                }
-//                mAdapter = new ChatListAdapter(getActivity(), conversationList, userList);
-//                mRecyclerView.setAdapter(mAdapter);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-
-        userList.clear();
-
-        mConversationReference.addValueEventListener(new ValueEventListener() {
+        myQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 conversationList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Conversation conversation = snapshot.getValue(Conversation.class);
                     conversationList.add(conversation);
-//                    conversationList.clear();
 
-                    key = snapshot.getKey();
-                    personId = snapshot.child("chatWithId").getValue(String.class);
+//                    userList.clear();
 
-                    Query query = mUserReference.orderByKey().equalTo(personId);
-                    query.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                User user = snapshot.getValue(User.class);
-                                userList.add(user);
-                            }
+//                    key = snapshot.getKey();
+//                    personId = snapshot.child("chatWithId").getValue(String.class);
+//
+//                    Query query = mUserReference.orderByKey().equalTo(personId);
+//                    query.addValueEventListener(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                                User user = snapshot.getValue(User.class);
+//                                userList.add(user);
+//                            }
                             mAdapter = new ChatListAdapter(getActivity(), conversationList, userList);
                             mRecyclerView.setAdapter(mAdapter);
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
+//
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                        }
+//                    });
                 }
-
 
             }
 
@@ -145,6 +114,18 @@ public class ChatTabFragment extends Fragment {
 
             }
         });
+
+        /*try {
+            String data = "2019-09-04T05:03:27.322Z";
+            SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+            input.setTimeZone(TimeZone.getTimeZone("UTC"));
+            SimpleDateFormat output = new SimpleDateFormat("EEE, dd-MM-yyyy hh:mm a", Locale.ENGLISH);
+            output.setTimeZone(TimeZone.getDefault());
+            Date date = input.parse(data);
+            Toast.makeText(getContext(), "date : " + output.format(date), Toast.LENGTH_SHORT).show();output.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }*/
 
         return rootView;
     }

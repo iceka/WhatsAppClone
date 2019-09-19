@@ -16,10 +16,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
         <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_chat_room"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:theme="@style/MyToolbarTheme"
             android:background="@color/colorPrimary">
 
             <LinearLayout
@@ -28,6 +29,12 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/avatar_chat_room"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@mipmap/ic_launcher" />
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -35,29 +42,25 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/username_chat_room"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:gravity="bottom"
                         android:textColor="@android:color/white"
                         android:textStyle="bold"
-                        tools:text="Imam Candra Kusuma" />
+                        android:text="Imam Candra Kusuma" />
 
                     <TextView
+                        android:id="@+id/last_seen_and_online"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:gravity="top"
                         android:textColor="#eef4f4"
                         android:textSize="12sp"
-                        tools:text="last seen today at 3:26 PM" />
+                        android:text="last seen today at 3:26 PM" />
                 </LinearLayout>
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@mipmap/ic_launcher" />
-
 
             </LinearLayout>
 

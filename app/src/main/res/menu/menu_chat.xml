@@ -16,4 +16,10 @@
         android:title="Phone Call"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/menu_view_contact"
+        android:title="View contact"
+        android:orderInCategory="3"
+        app:showAsAction="never" />
+
 </menu>
