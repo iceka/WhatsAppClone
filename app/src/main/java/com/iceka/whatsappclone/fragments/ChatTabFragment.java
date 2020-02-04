@@ -1,9 +1,11 @@
 package com.iceka.whatsappclone.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,29 +26,30 @@ import com.google.firebase.database.ValueEventListener;
 import com.iceka.whatsappclone.R;
 import com.iceka.whatsappclone.adapters.ChatListAdapter;
 import com.iceka.whatsappclone.models.Conversation;
+import com.iceka.whatsappclone.models.StatusText;
 import com.iceka.whatsappclone.models.User;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 public class ChatTabFragment extends Fragment {
 
+    private static final String TAG = "LOG Example";
+
     private RecyclerView mRecyclerView;
+    private LinearLayout mStartChatLayout;
+
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mConversationReference;
+    private DatabaseReference mStatusReference;
     private DatabaseReference mUserReference;
     private FirebaseAuth mAuth;
     private FirebaseUser mFirebaseUser;
-    private ChatListAdapter mAdapter;
 
-    private String personId;
-    private String key;
+    private ChatListAdapter mAdapter;
 
     private List<User> userList = new ArrayList<>();
     private List<Conversation> conversationList = new ArrayList<>();
@@ -57,6 +60,7 @@ public class ChatTabFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_chat_tab, container, false);
 
         mRecyclerView = rootView.findViewById(R.id.recyvlerview_chat_tab);
+        mStartChatLayout = rootView.findViewById(R.id.layout_start_chat);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
 //        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -71,16 +75,36 @@ public class ChatTabFragment extends Fragment {
 
         mConversationReference = mFirebaseDatabase.getReference().child("conversation").child(mFirebaseUser.getUid());
         mUserReference = mFirebaseDatabase.getReference().child("users");
+        mStatusReference = mFirebaseDatabase.getReference().child("status");
 
         Query myQuery = mConversationReference.orderByChild("timestamp");
+//        myQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                conversationList.clear();
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    Conversation conversation = snapshot.getValue(Conversation.class);
+//                    conversationList.add(conversation);
+//                    mAdapter = new ChatListAdapter(getActivity(), conversationList, userList);
+//                    mRecyclerView.setAdapter(mAdapter);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
         myQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 conversationList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Conversation conversation = snapshot.getValue(Conversation.class);
-                    conversationList.add(conversation);
+                if (dataSnapshot.exists()) {
+                    mStartChatLayout.setVisibility(View.GONE);
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Conversation conversation = snapshot.getValue(Conversation.class);
+                        conversationList.add(conversation);
 
 //                    userList.clear();
 
@@ -95,8 +119,8 @@ public class ChatTabFragment extends Fragment {
 //                                User user = snapshot.getValue(User.class);
 //                                userList.add(user);
 //                            }
-                            mAdapter = new ChatListAdapter(getActivity(), conversationList, userList);
-                            mRecyclerView.setAdapter(mAdapter);
+                        mAdapter = new ChatListAdapter(getActivity(), conversationList, userList);
+                        mRecyclerView.setAdapter(mAdapter);
 //
 //                        }
 //
@@ -105,7 +129,9 @@ public class ChatTabFragment extends Fragment {
 //
 //                        }
 //                    });
+                    }
                 }
+
 
             }
 
@@ -114,6 +140,25 @@ public class ChatTabFragment extends Fragment {
 
             }
         });
+
+
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.add(Calendar.MINUTE, 2);
+//        long cutOff = new Date().getTime() - TimeUnit.MILLISECONDS.convert(2, TimeUnit.MINUTES);
+//        Query oldStatus = mStatusReference.child(mFirebaseUser.getUid()).child("typeStatus").orderByChild("timestamp").startAt(calendar.getTimeInMillis());
+//        oldStatus.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    snapshot.getRef().removeValue();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
         /*try {
             String data = "2019-09-04T05:03:27.322Z";

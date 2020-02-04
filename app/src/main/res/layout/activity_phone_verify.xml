@@ -9,7 +9,7 @@
     tools:context=".PhoneVerifyActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_input_number"
+        android:id="@+id/toolbar_phone_verify"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:theme="@style/MyToolbarTheme">
@@ -20,17 +20,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Verify +6285814993643"
+            tools:text="Verify +6285814993643"
             android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             android:textColor="#00897b" />
 
     </androidx.appcompat.widget.Toolbar>
 
     <TextView
-        android:id="@+id/tv"
+        android:id="@+id/tv_wating_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar_input_number"
+        android:layout_below="@id/toolbar_phone_verify"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
@@ -41,9 +41,10 @@
         android:id="@+id/et_verification_code"
         android:layout_width="160dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv"
+        android:layout_below="@id/tv_wating_text"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
+        android:backgroundTint="#00887A"
         android:textSize="18sp" />
 
     <TextView
@@ -54,16 +55,66 @@
         android:layout_centerHorizontal="true"
         android:text="Enter 6-digit code" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_contoh"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:drawableLeft="@drawable/ic_chat_black_24dp"
-        android:drawablePadding="8dp"
-        android:text="Resend SMS"
-        android:textColor="#26A69A" />
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/tv_resend_sms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_chat_black_24dp"
+                android:drawablePadding="10dp"
+                android:text="Resend SMS"
+                android:textColor="#26A69A" />
+
+            <TextView
+                android:id="@+id/tv_countdown_sms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                tools:text="1:03"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E2E2E2" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/tv_call_me"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_phone_black_green_24dp"
+                android:drawablePadding="10dp"
+                android:text="Resend SMS"
+                android:textColor="#26A69A" />
+
+            <TextView
+                android:id="@+id/tv_countdown_call"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                tools:text="1:03"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/bt_next_main"

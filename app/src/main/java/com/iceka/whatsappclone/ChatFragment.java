@@ -100,6 +100,27 @@ public class ChatFragment extends Fragment {
                 if (charSequence.length() == 0) {
                     showSendButton();
                     mAttachPict.setVisibility(View.GONE);
+                    mFab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String contoh = mMessageText.getText().toString();
+                            long timestamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+                            Chat chat = new Chat(contoh, mFirebaseUser.getUid(), id, timestamp);
+                            mChatReference.push().setValue(chat);
+                            mMessageText.setText("");
+
+                            unreadCount = unreadCount + 1;
+                            Conversation conversationSender = new Conversation(mFirebaseUser.getUid(), id, contoh, timestamp);
+                            Conversation conversationReceiver = new Conversation(id, mFirebaseUser.getUid(), contoh, timestamp, unreadCount);
+
+                            DatabaseReference senderReference = mConversationReference.child(mFirebaseUser.getUid()).child(id);
+                            senderReference.setValue(conversationSender);
+                            DatabaseReference receiverReference = mConversationReference.child(id).child(mFirebaseUser.getUid());
+                            receiverReference.setValue(conversationReceiver);
+
+                        }
+                    });
+
                 }
             }
 
@@ -113,34 +134,16 @@ public class ChatFragment extends Fragment {
                 if (editable.length() == 0) {
                     showVoiceButton();
                     mAttachPict.setVisibility(View.VISIBLE);
+                    mFab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                        }
+                    });
                 }
             }
         });
 
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String contoh = mMessageText.getText().toString();
-//                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
-//                dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-//                String timestamp = dateFormat.format(new Date()).toString();
-//                String timeStamp = String.valueOf(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()));
-                long timestamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
-                Chat chat = new Chat(contoh, mFirebaseUser.getUid(), id, timestamp);
-                mChatReference.push().setValue(chat);
-                mMessageText.setText("");
-
-                unreadCount = unreadCount + 1;
-                Conversation conversationSender = new Conversation(mFirebaseUser.getUid(), id, contoh, timestamp);
-                Conversation conversationReceiver = new Conversation(id, mFirebaseUser.getUid(), contoh, timestamp, unreadCount);
-
-                DatabaseReference senderReference = mConversationReference.child(mFirebaseUser.getUid()).child(id);
-                senderReference.setValue(conversationSender);
-                DatabaseReference receiverReference = mConversationReference.child(id).child(mFirebaseUser.getUid());
-                receiverReference.setValue(conversationReceiver);
-
-            }
-        });
 
         mChatReference.addChildEventListener(new ChildEventListener() {
             @Override

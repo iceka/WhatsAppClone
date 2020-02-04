@@ -14,7 +14,6 @@
         android:id="@+id/appbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
@@ -52,40 +51,40 @@
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
-    <!--<LinearLayout-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentEnd="true"-->
-    <!--android:layout_alignParentRight="true"-->
-    <!--android:layout_alignParentBottom="true"-->
-    <!--android:orientation="vertical">-->
-
-    <!--<com.google.android.material.floatingactionbutton.FloatingActionButton-->
-    <!--android:id="@+id/fab_top"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="center"-->
-    <!--android:backgroundTint="#EFF6F6"-->
-    <!--android:src="@drawable/ic_create_24dp"-->
-    <!--app:borderWidth="0dp"-->
-    <!--app:fabSize="mini" />-->
-
-    <!--<com.google.android.material.floatingactionbutton.FloatingActionButton-->
-    <!--android:id="@+id/fab_bottom"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_margin="16dp"-->
-    <!--tools:src="@drawable/ic_comment_white_24dp" />-->
-
-    <!--</LinearLayout>-->
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_comment_white_24dp" />
+        android:orientation="vertical">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:backgroundTint="#EFF6F6"
+            android:visibility="invisible"
+            android:src="@drawable/ic_create_24dp"
+            app:borderWidth="0dp"
+            app:fabSize="mini" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_comment_white_24dp" />
+
+    </LinearLayout>
+
+    <!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+    <!--        android:id="@+id/fab"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_gravity="bottom|end"-->
+    <!--        android:layout_margin="16dp"-->
+    <!--        android:src="@drawable/ic_comment_white_24dp" />-->
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

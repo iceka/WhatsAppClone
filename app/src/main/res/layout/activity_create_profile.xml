@@ -5,61 +5,73 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
     tools:context=".CreateProfileActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_etc"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/img_avatar_create"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_camera_alt_24dp"
-            app:civ_circle_background_color="#E0E0E0" />
-
-        <EditText
-            android:id="@+id/et_create_profile_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:hint="Input Username"
-            android:inputType="text" />
-
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tv_etc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar_input_number"
-        android:layout_centerHorizontal="true"
-        android:text="Please provide your name and an optional profile photoUrl" />
-
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_input_number"
+        android:id="@+id/toolbar_create_profile"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:theme="@style/MyToolbarTheme">
 
 
         <TextView
-            android:id="@+id/toolbar_title_input_number"
+            android:id="@+id/toolbar_title_input_numberss"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Verify your phone number"
+            android:text="Profile info"
             android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             android:textColor="#00897b" />
 
     </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar_create_profile"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_etc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toolbar_create_profile"
+            android:layout_centerHorizontal="true"
+            android:text="Please provide your name and an optional profile photoUrl" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_avatar_create"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/ic_add_a_photo_black_24dp"
+            app:civ_circle_background_color="#27343C" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/et_create_profile_username"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Input Username"
+                android:inputType="text" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingLeft="4dp"
+                android:src="@drawable/ic_insert_emoticon_dark_24dp" />
+        </LinearLayout>
+
+
+    </LinearLayout>
 
 
     <Button

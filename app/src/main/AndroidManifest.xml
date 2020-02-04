@@ -2,6 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.iceka.whatsappclone">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,13 +17,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ChatRoomActivity"></activity>
+        <activity android:name=".SelectCountryCallingCodeActivity" />
+        <activity android:name=".ShowMyStatusActivity" />
+        <activity android:name=".EditStatusActivity" />
+        <activity android:name=".ShowOtherStatusActivity" />
+        <activity android:name=".ChatRoomActivity" />
         <activity android:name=".CreateProfileActivity" />
-        <activity android:name=".InputPhoneNumberActivity" />
+        <activity
+            android:name=".InputPhoneNumberActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".PhoneVerifyActivity" />
         <activity android:name=".ContactActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".CameraActivity" />
+        <activity
+            android:name=".StatusTextActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity android:name=".WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,13 +41,5 @@
             </intent-filter>
         </activity>
     </application>
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.INTERNET" />
-
-    <uses-permission android:name="android.permission.FLASHLIGHT" />
 
 </manifest>

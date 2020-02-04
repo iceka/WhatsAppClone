@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/secondaryProgress">
+        <scale
+            android:scaleWidth="100%"
+            android:drawable="@color/colorPrimary" />
+    </item>
+    <item android:id="@+id/progress">
+        <scale
+            android:scaleWidth="100%"
+            android:drawable="@color/statusPurple" />
+    </item>
+</layer-list>

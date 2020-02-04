@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:id="@+id/country_calling_code_layout"
+    android:padding="8dp"
+    android:weightSum="5">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/country_flag" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_weight="3.5"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_country_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            tools:text="Indonesia" />
+
+        <TextView
+            android:id="@+id/tv_country_local_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Indo" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_dial_code"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="end"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        tools:text="+62" />
+
+    <ImageView
+        android:visibility="invisible"
+        android:id="@+id/img_country_code_selected"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight=".5"
+        android:src="@drawable/ic_check_black_24dp" />
+
+
+</LinearLayout>

@@ -3,7 +3,6 @@ package com.iceka.whatsappclone.models;
 public class Conversation {
 
     private String userUid;
-    private String username;
     private String chatWithId;
     private String chatId;
     private String lastMessage;
@@ -43,14 +42,6 @@ public class Conversation {
 
     public void setUserUid(String userUid) {
         this.userUid = userUid;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getChatWithId() {

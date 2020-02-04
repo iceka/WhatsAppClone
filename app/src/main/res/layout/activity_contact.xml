@@ -7,20 +7,39 @@
     android:orientation="vertical"
     tools:context=".ContactActivity">
 
-    <ListView
-        android:id="@+id/listviewcontact"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/toolbar_contact"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/MyToolbarTheme"
-        app:layout_scrollFlags="scroll"
-        app:title="@string/app_name" />
+        app:layout_scrollFlags="scroll">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:text="Select contact"
+                android:textColor="@android:color/white"
+                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
+
+            <TextView
+                android:id="@+id/tv_contact_counts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:text="34 contacts"
+                android:textColor="#eef4f4"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_contact"

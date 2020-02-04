@@ -10,16 +10,14 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_input_number"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:theme="@style/MyToolbarTheme">
-
+        android:layout_height="?attr/actionBarSize">
 
         <TextView
-            android:id="@+id/toolbar_title_input_number"
+            android:id="@+id/toolbar_title_input_numbers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Verify your phone number"
+            android:text="Enter your phone number"
             android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             android:textColor="#00897b" />
 
@@ -32,7 +30,7 @@
         android:layout_below="@id/toolbar_input_number"
         android:layout_margin="8dp"
         android:gravity="center"
-        android:text="WhatsApp will send an SMS message (carrier charges may apply) to verify your phone number. Enter your country code and phone number." />
+        android:text="@string/enter_phone_number" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,9 +41,20 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <Spinner
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/et_country_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#00887A"
+                android:drawableRight="@drawable/ic_arrow_drop_down_black_24dp"
+                android:focusableInTouchMode="false"
+                android:gravity="center" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -57,6 +66,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".3"
+                android:backgroundTint="#00887A"
                 android:drawableLeft="@drawable/ic_add_black_24dp"
                 android:gravity="center"
                 android:inputType="number"
@@ -67,10 +77,17 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".7"
+                android:backgroundTint="#00887A"
                 android:hint="phone number"
                 android:inputType="phone" />
 
         </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Carrier SMS charges may apply" />
 
 
     </LinearLayout>

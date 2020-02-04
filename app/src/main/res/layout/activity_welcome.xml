@@ -4,46 +4,75 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
     tools:context=".WelcomeActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:text="Welcome to WhatsApp"
-        android:textColor="#00897b"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="260dp"
-        android:layout_height="260dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/welcome_screen_image" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Welcome to WhatsApp"
+            android:textColor="#00897b"
+            android:textSize="28sp" />
 
-    <TextView
-        android:layout_width="wrap_content"
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="230dp"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:src="@drawable/welcome_screen_image" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:lineSpacingExtra="3dp"
+            android:text="@string/term_of_service" />
+
+        <Button
+            android:id="@+id/btn_agree_tos"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="#00CC3F"
+            android:paddingLeft="60dp"
+            android:paddingRight="60dp"
+            android:text="Agree and continue"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/layout_from_ceka"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/btn_agree_tos"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="16dp"
+        android:orientation="vertical"
         android:gravity="center"
-        android:text="@string/term_of_service" />
+        android:layout_marginBottom="18dp"
+        android:layout_alignParentBottom="true">
 
-    <Button
-        android:id="@+id/btn_agree_tos"
-        android:layout_width="wrap_content"
-        android:layout_height="34dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-        android:background="#25d366"
-        android:paddingLeft="70dp"
-        android:paddingRight="70dp"
-        android:text="Agree and continue"
-        android:textAllCaps="true"
-        android:textColor="@android:color/white" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="from" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="C E K A"
+            android:textColor="#2ECD69" />
+
+    </LinearLayout>
+
+
 </RelativeLayout>

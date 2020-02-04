@@ -9,6 +9,8 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -34,7 +36,7 @@ public class PhoneVerifyActivity extends AppCompatActivity {
 
     private String phoneNumber;
     private String verificationId;
-
+    private int counter;
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
@@ -43,17 +45,24 @@ public class PhoneVerifyActivity extends AppCompatActivity {
 
     private EditText mEtCode;
     private Button mBtNext;
+    private TextView mTvWaiting;
+    private Toolbar mToolbar;
+    private TextView mToolbarTitle;
+    private TextView mTvCountdownSMS;
+
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallback = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
         public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
             verificationId = s;
+            Log.i("TESTAJA", "verifid : " + verificationId);
         }
 
         @Override
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
             String code = phoneAuthCredential.getSmsCode();
             if (code != null) {
+                Log.i("TESTAJA", "code : " + code);
                 mEtCode.setText(code);
                 verifyCode(code);
             }
@@ -70,17 +79,41 @@ public class PhoneVerifyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_verify);
 
+        phoneNumber = getIntent().getStringExtra("phonenumber");
+        Log.i("TESTAJA", "No hp : " + phoneNumber);
+
         mEtCode = findViewById(R.id.et_verification_code);
         mBtNext = findViewById(R.id.bt_next_main);
+        mTvWaiting = findViewById(R.id.tv_wating_text);
+        mToolbarTitle = findViewById(R.id.toolbar_title_input_number);
+        mTvCountdownSMS = findViewById(R.id.tv_countdown_sms);
+
+        String test = getString(R.string.waiting_sms, phoneNumber);
+        mTvWaiting.setText(test);
+        mToolbarTitle.setText("Verify " + phoneNumber);
+
         mEtCode.requestFocus();
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
-        phoneNumber = getIntent().getStringExtra("phonenumber");
-//        Toast.makeText(this, "phone number : " + phoneNumber, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "phone number : " + phoneNumber, Toast.LENGTH_SHORT).show();
         sendVerificationCode(phoneNumber);
+
+        new CountDownTimer(130000, 1000) {
+
+            @Override
+            public void onTick(long l) {
+                mTvCountdownSMS.setText(String.valueOf(l / 1000));
+//                counter++;
+            }
+
+            @Override
+            public void onFinish() {
+                Toast.makeText(PhoneVerifyActivity.this, "Finish!", Toast.LENGTH_SHORT).show();
+            }
+        }.start();
 
         mBtNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +153,5 @@ public class PhoneVerifyActivity extends AppCompatActivity {
     private void sendVerificationCode(String number) {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(number, 60, TimeUnit.SECONDS, TaskExecutors.MAIN_THREAD, mCallback);
     }
-
 
 }

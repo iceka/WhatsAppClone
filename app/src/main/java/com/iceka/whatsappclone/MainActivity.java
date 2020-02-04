@@ -1,27 +1,26 @@
 package com.iceka.whatsappclone;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
+
+import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.iceka.whatsappclone.adapters.TabAdapter;
 
 import java.util.concurrent.TimeUnit;
@@ -34,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton mFabBottom;
     private FloatingActionButton mFabTop;
     private static boolean fabTopVisible = false;
+    private static final int RC_PHOTO_PICKER = 2;
     private Toolbar mToolbar;
     private AppBarLayout mAppBarLayout;
 
@@ -50,11 +50,11 @@ public class MainActivity extends AppCompatActivity {
 
         mTabLayout = findViewById(R.id.tab_layout);
         mViewPager = findViewById(R.id.viewpager);
-//        mFabBottom = (FloatingActionButton) findViewById(R.id.fab_bottom);
-//        mFabTop = (FloatingActionButton) findViewById(R.id.fab_top);
+        mFabBottom = findViewById(R.id.fab_bottom);
+        mFabTop = findViewById(R.id.fab_top);
         mToolbar = findViewById(R.id.toolbar);
         mAppBarLayout = findViewById(R.id.appbar_layout);
-        mFab = findViewById(R.id.fab);
+//        mFab = findViewById(R.id.fab);
 
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void fabSettings() {
         if (mViewPager.getCurrentItem() == 1) {
-            mFab.setOnClickListener(new View.OnClickListener() {
+            mFabBottom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     startActivity(new Intent(MainActivity.this, ContactActivity.class));
@@ -101,13 +101,16 @@ public class MainActivity extends AppCompatActivity {
                 int position = tab.getPosition();
                 switch (position) {
                     case 0:
-                        mFab.hide();
+                        mFabTop.hide();
+                        mFabBottom.hide();
                         break;
                     case 1:
-                        mFab.hide();
-                        mFab.setImageResource(R.drawable.ic_comment_white_24dp);
-                        mFab.show();
-                        mFab.setOnClickListener(new View.OnClickListener() {
+                        mFabBottom.hide();
+                        mFabBottom.setImageResource(R.drawable.ic_comment_white_24dp);
+                        mFabTop.hide();
+                        mFabBottom.show();
+
+                        mFabBottom.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 Toast.makeText(MainActivity.this, "view 1", Toast.LENGTH_SHORT).show();
@@ -116,21 +119,34 @@ public class MainActivity extends AppCompatActivity {
                         });
                         break;
                     case 2:
-                        mFab.setImageResource(R.drawable.ic_camera_alt_white_24dp);
-                        mFab.hide();
-                        mFab.show();
-                        mFab.setOnClickListener(new View.OnClickListener() {
+                        mFabTop.hide();
+                        mFabBottom.setImageResource(R.drawable.ic_camera_alt_white_24dp);
+                        mFabTop.show();
+                        mFabBottom.hide();
+                        mFabBottom.show();
+                        mFabTop.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                Toast.makeText(MainActivity.this, "view 2", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(MainActivity.this, "clicked", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(MainActivity.this, StatusTextActivity.class));
+                            }
+                        });
+                        mFabBottom.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                                intent.setType("image/jpeg");
+                                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+                                startActivityForResult(Intent.createChooser(intent, "Complete action using"), RC_PHOTO_PICKER);
                             }
                         });
                         break;
                     default:
-                        mFab.hide();
-                        mFab.setImageResource(R.drawable.ic_phone_black_white_24dp);
-                        mFab.show();
-                        mFab.setOnClickListener(new View.OnClickListener() {
+                        mFabTop.hide();
+                        mFabBottom.hide();
+                        mFabBottom.setImageResource(R.drawable.ic_phone_black_white_24dp);
+                        mFabBottom.show();
+                        mFabBottom.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 Toast.makeText(MainActivity.this, "view 3", Toast.LENGTH_SHORT).show();
@@ -163,6 +179,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK) {
+            if (data != null) {
+                Uri selectedImage = data.getData();
+                Intent intent = new Intent(this, EditStatusActivity.class);
+                intent.setData(selectedImage);
+//                intent.putExtra("imagenya", selectedImage);
+                startActivity(intent);
+            } else {
+                Toast.makeText(getApplicationContext(), "data is null", Toast.LENGTH_SHORT).show();
+            }
+
+        } else {
+            Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         userReference.child("online").setValue(true);
@@ -180,5 +215,14 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mViewPager.getCurrentItem() == 1) {
+            super.onBackPressed();
+        } else {
+            mViewPager.setCurrentItem(1);
+        }
     }
 }

@@ -2,39 +2,56 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
-    android:orientation="vertical"
-    android:padding="8dp">
+    android:layout_height="60dp"
+    android:id="@+id/layout_other_status"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/avatar_status"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:id="@+id/thumbnail_status"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_centerVertical="true"
-        tools:src="@mipmap/ic_launcher" />
+        android:padding="3dp"
+        android:src="@mipmap/ic_launcher" />
+
+    <com.devlomi.circularstatusview.CircularStatusView
+        android:id="@+id/circular_status_counts"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        app:portion_width="2dp"
+        app:portion_spacing="6dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toRightOf="@id/avatar_status"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/thumbnail_status"
+        android:layout_toRightOf="@id/thumbnail_status"
         android:orientation="vertical"
-        android:paddingLeft="16dp">
+        android:paddingStart="8dp"
+        android:paddingLeft="8dp"
+        android:paddingEnd="8dp"
+        android:paddingRight="8dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="bottom"
+            android:text="My status"
+            android:id="@+id/username_status"
             android:textColor="@android:color/black"
-            android:textSize="16sp"
-            tools:text="John Snow" />
+            android:textSize="17sp" />
 
         <TextView
+            android:id="@+id/date_status"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="top"
-            tools:text="Today, 8:00 AM" />
+            android:text="Tap to add status update" />
 
     </LinearLayout>
 

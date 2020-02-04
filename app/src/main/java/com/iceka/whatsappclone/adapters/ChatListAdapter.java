@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,6 +66,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
         Conversation conversation = conversationList.get(position);
 
         String id = conversation.getChatWithId();
+        Log.i("listadapter", "id: " + id);
         mUserReference.child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -81,6 +83,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyView
                         Intent intent = new Intent(mContext, ChatRoomActivity.class);
                         intent.putExtra(ChatRoomActivity.EXTRAS_USER, user);
                         intent.putExtra("userUid", conversation.getChatWithId());
+                        intent.putExtra("otherUid", user.getUid());
                         mContext.startActivity(intent);
                         if (user.isOnline()) {
                             Toast.makeText(mContext, "online BOSS : " + user.getLastSeen(), Toast.LENGTH_SHORT).show();

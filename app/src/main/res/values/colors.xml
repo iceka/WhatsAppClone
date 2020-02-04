@@ -3,4 +3,51 @@
     <color name="colorPrimary">#065E55</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#21C65A</color>
+
+    <color name="statusIndigo">#8B6990</color>
+    <color name="statusLightPink">#FF8A8C</color>
+    <color name="statusGreen">#54C265</color>
+    <color name="statusRed">#FF7B6B</color>
+    <color name="statusCyan">#26C4DC</color>
+    <color name="statusLightBlue">#57C9FF</color>
+    <color name="statusGray">#74676A</color>
+    <color name="statusBlueGrey">#7E90A3</color>
+    <color name="statusBlue">#5696FF</color>
+    <color name="statusDeepPurple">#6E257E</color>
+    <color name="statusLightGreen">#7ACBA5</color>
+    <color name="statusDarkBlueGrey">#243640</color>
+    <color name="statusLightIndigo">#8294CA</color>
+    <color name="statusPink">#A62C71</color>
+    <color name="statusGreenLime">#90A841</color>
+    <color name="statusOrange">#C1A03F</color>
+    <color name="statusDarkPink">#792138</color>
+    <color name="statusBrown">#AE8774</color>
+    <color name="statusYellow">#F0B330</color>
+    <color name="statusLime">#B6B327</color>
+    <color name="statusPurple">#C69FCC</color>
+
+    <array name="statusBackground">
+        <item>@color/statusIndigo</item>
+        <item>@color/statusLightPink</item>
+        <item>@color/statusGreen</item>
+        <item>@color/statusRed</item>
+        <item>@color/statusCyan</item>
+        <item>@color/statusLightBlue</item>
+        <item>@color/statusGray</item>
+        <item>@color/statusBlueGrey</item>
+        <item>@color/statusBlue</item>
+        <item>@color/statusDeepPurple</item>
+        <item>@color/statusLightGreen</item>
+        <item>@color/statusDarkBlueGrey</item>
+        <item>@color/statusLightIndigo</item>
+        <item>@color/statusPink</item>
+        <item>@color/statusGreenLime</item>
+        <item>@color/statusOrange</item>
+        <item>@color/statusDarkPink</item>
+        <item>@color/statusBrown</item>
+        <item>@color/statusYellow</item>
+        <item>@color/statusPurple</item>
+        <item>@color/statusLime</item>
+    </array>
+
 </resources>
