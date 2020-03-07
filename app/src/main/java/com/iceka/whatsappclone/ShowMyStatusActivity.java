@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
@@ -24,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.iceka.whatsappclone.adapters.StatusFlipperAdapter;
 import com.iceka.whatsappclone.models.StatusItem;
+import com.iceka.whatsappclone.models.Viewed;
 import com.iceka.whatsappclone.utils.Utility;
 
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ public class ShowMyStatusActivity extends AppCompatActivity {
     private TextView mUsername;
     private TextView mTime;
     private ProgressBar[] mProgressBar;
+    private TextView mSeenCount;
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
@@ -58,6 +61,7 @@ public class ShowMyStatusActivity extends AppCompatActivity {
         mUsername = findViewById(R.id.my_status_username);
         mTime = findViewById(R.id.my_status_time);
         mToolbar = findViewById(R.id.my_status_toolbar);
+        mSeenCount = findViewById(R.id.tv_seen_count);
 
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -75,7 +79,6 @@ public class ShowMyStatusActivity extends AppCompatActivity {
         mStatusReference.child(mFirebaseUser.getUid()).child("statusItem").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     StatusItem statusItem = snapshot.getValue(StatusItem.class);
                     statusItemList.add(statusItem);
@@ -84,7 +87,11 @@ public class ShowMyStatusActivity extends AppCompatActivity {
                     mViewFlipper.setFlipInterval(2500);
                     mViewFlipper.startFlipping();
                     flipperCount = mViewFlipper.getCount();
-                    Toast.makeText(ShowMyStatusActivity.this, "count : " + flipperCount, Toast.LENGTH_SHORT).show();
+                    List<Viewed> viewedList = new ArrayList<>();
+                    viewedList.add(statusItem.getViewed());
+//                    Log.i("MYTAG", "textnya aja : " + viewedList.size());
+                    mSeenCount.setText(String.valueOf(snapshot.child("viewed").getChildrenCount()));
+                    Log.i("MYTAG", "child view coun : " + snapshot.child("viewed").getChildrenCount());
                 }
                 mProgressBar = new ProgressBar[flipperCount];
                 for (int i = 0; i < flipperCount; i++) {
@@ -95,6 +102,8 @@ public class ShowMyStatusActivity extends AppCompatActivity {
                     mProgressBar[i].getProgress();
                     ViewGroup mViewGroup = findViewById(R.id.my_status_parent_progressbar);
                     mViewGroup.addView(mProgressBar[i]);
+
+
                 }
             }
 

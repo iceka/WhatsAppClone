@@ -1,5 +1,7 @@
 package com.iceka.whatsappclone.models;
 
+import java.util.Map;
+
 public class StatusItem {
 
     private String id;
@@ -12,18 +14,20 @@ public class StatusItem {
     private long expireTime;
     private int backgroundColor;
     private Viewed viewed;
+    private String thumbnail;
 
     public StatusItem() {
     }
 
     // For Text
-    public StatusItem(String id, String type, String text, long timestamp, long expireTime, int backgroundColor, Viewed viewed) {
+    public StatusItem(String id, String type, String text, long timestamp, long expireTime, int backgroundColor, String thumbnail, Viewed viewed) {
         this.id = id;
         this.type = type;
         this.text = text;
         this.timestamp = timestamp;
         this.expireTime = expireTime;
         this.backgroundColor = backgroundColor;
+        this.thumbnail = thumbnail;
         this.viewed = viewed;
     }
 
@@ -84,6 +88,10 @@ public class StatusItem {
 
     public int getBackgroundColor() {
         return backgroundColor;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
     }
 
     public Viewed getViewed() {

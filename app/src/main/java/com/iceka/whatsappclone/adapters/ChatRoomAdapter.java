@@ -2,6 +2,7 @@ package com.iceka.whatsappclone.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,10 +87,17 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    private void configureViewholderOutgoing(OutgoingViewHolder holder, int position) {
+    private void configureViewholderOutgoing(final OutgoingViewHolder holder, int position) {
         Chat chat = (Chat) chatList.get(position);
         if (chat != null) {
             holder.message.setText(chat.getMessage());
+            holder.message.post(new Runnable() {
+                @Override
+                public void run() {
+                    int linecount = holder.message.getLineCount();
+                    Log.i("MYTAG", "Lines : " + linecount);
+                }
+            });
         }
     }
 

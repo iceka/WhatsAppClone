@@ -3,6 +3,8 @@ package com.iceka.whatsappclone;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
+import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,28 +19,35 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.iceka.whatsappclone.adapters.StatusFlipperAdapter;
 import com.iceka.whatsappclone.models.StatusItem;
-import com.iceka.whatsappclone.models.StatusText;
+import com.iceka.whatsappclone.models.User;
 import com.iceka.whatsappclone.models.Viewed;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ShowOtherStatusActivity extends AppCompatActivity {
 
     private AdapterViewFlipper mAdapterViewFlipper;
     private TextView mSeenCount;
     private Toolbar mToolbar;
+    private CircleImageView mAvatarUser;
+    private TextView mUsername;
+    private TextView mDate;
     private LinearLayout mViewedCount;
     private ProgressBar[] mProgressBar;
 
@@ -47,16 +56,13 @@ public class ShowOtherStatusActivity extends AppCompatActivity {
     private DatabaseReference mStatusReference;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
+    private DatabaseReference mUserReference;
 
     private String myId;
     private int flipperCount;
     private ObjectAnimator animation;
     private String id;
-    private String pushkey;
 
-    private List<StatusText> statusTextList = new ArrayList<>();
-    private List<String> statusId = new ArrayList<>();
-    private List<String> listId = new ArrayList<>();
     private List<StatusItem> statusItemList = new ArrayList<>();
 
     @Override
@@ -66,78 +72,29 @@ public class ShowOtherStatusActivity extends AppCompatActivity {
 
         mAdapterViewFlipper = findViewById(R.id.status_view_flipper);
         mSeenCount = findViewById(R.id.tv_seen_count);
-//        mToolbar = findViewById(R.id.toolbar_status);
+        mToolbar = findViewById(R.id.toolbar_status);
         mViewedCount = findViewById(R.id.layout_viewed_by_status);
+        mAvatarUser = findViewById(R.id.avatar_status_user);
+        mDate = findViewById(R.id.tv_status_date);
+        mUsername = findViewById(R.id.tv_status_username);
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
         myId = mFirebaseUser.getUid();
 
-        listId.add(myId);
 
         mStatusReference = firebaseDatabase.getReference().child("status");
+        mUserReference = firebaseDatabase.getReference().child("users");
 
         id = getIntent().getStringExtra("uid");
-//        mToolbar.bringToFront();
+        mToolbar.bringToFront();
 
         showStatus();
     }
 
-//    private void showStatus() {
-//        Query myQuery = mStatusReference.orderByKey().startAt(id);
-//        myQuery.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    mStatusReference.child(snapshot.getKey()).child("typeStatus").addValueEventListener(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                            for (DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
-//                                StatusItem statusItem = snapshot1.getValue(StatusItem.class);
-//                                statusItemList.add(statusItem);
-//                                mAdapter = new StatusFlipperAdapter(getApplicationContext(), statusItemList);
-//                                mAdapterViewFlipper.setAdapter(mAdapter);
-//                                mAdapterViewFlipper.setFlipInterval(2500);
-//                                flipperCount = mAdapterViewFlipper.getCount();
-//                                mAdapterViewFlipper.startFlipping();
-//                                Log.i("MYTAG", "Viewnya : " + statusItem.getType());
-//                                Toast.makeText(ShowOtherStatusActivity.this, "count : " + flipperCount + " : " + statusTextList.size(), Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                        }
-//                    });
-//
-//                }
-////                mProgressBar = new ProgressBar[statusTextList.size()];
-////                for (int i = 0; i < flipperCount; i++) {
-////                    mProgressBar[i] = new ProgressBar(getApplicationContext(), null, android.R.attr.progressBarStyleHorizontal);
-////                    mProgressBar[i].setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-////                    setMargins(mProgressBar[i]);
-////                    setProgressMax(mProgressBar[i]);
-////                    mProgressBar[i].getProgress();
-////                    ViewGroup mViewGroup = findViewById(R.id.parent_progress_bar_layout);
-////                    mViewGroup.addView(mProgressBar[i]);
-////                }
-////                            ProgressBar progressBar = new ProgressBar(getApplicationContext(), null, android.R.attr.progressBarStyleHorizontal);
-////                            ViewGroup mViewGroup = findViewById(R.id.parent_progress_bar_layout);
-////                            mViewGroup.addView(progressBar);
-//            }
-//
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
-
-    // newest
-  /*  private void showStatus() {
+  /*  // newest
+    private void showStatus() {
         Query myQuery = mStatusReference.orderByKey().startAt(id);
         myQuery.addValueEventListener(new ValueEventListener() {
             @Override
@@ -186,6 +143,21 @@ public class ShowOtherStatusActivity extends AppCompatActivity {
     }*/
 
     private void showStatus() {
+        mUserReference.child(id).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                mUsername.setText(user.getUsername());
+                Glide.with(getApplicationContext())
+                        .load(user.getPhotoUrl())
+                        .into(mAvatarUser);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         mStatusReference.child(id).child("statusItem").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
@@ -213,6 +185,14 @@ public class ShowOtherStatusActivity extends AppCompatActivity {
                         public void onLayoutChange(final View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
                             setProgressAnimate(mProgressBar[mAdapterViewFlipper.getDisplayedChild()]);
                             final StatusItem statusItem = statusItemList.get(mAdapterViewFlipper.getDisplayedChild());
+                            long timeFromServer = statusItem.getTimestamp();
+                            Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
+                            calendar.setTimeInMillis(timeFromServer * 1000);
+                            long co = calendar.getTimeInMillis();
+                            DateFormat.format("M/dd/yyyy", calendar);
+                            CharSequence now = DateUtils.getRelativeTimeSpanString(co, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS);
+                            mDate.setText(now);
+                            Toast.makeText(ShowOtherStatusActivity.this, "cek : " + statusItem.getText(), Toast.LENGTH_SHORT).show();
                             if (id.equals(myId)) {
                                 mViewedCount.setVisibility(View.VISIBLE);
                             } else {

@@ -1,30 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraint_layout_chat_out"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignParentEnd="true"
-    android:layout_alignParentRight="true"
-    android:layout_marginStart="30dp"
-    android:layout_marginLeft="30dp"
-    android:background="@drawable/bubble_outgoing">
+    android:layout_marginLeft="30dp">
 
-    <TextView
-        android:id="@+id/tv_chat_outgoing"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_first"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
-        android:layout_toLeftOf="@id/tv_time_chat_outgoing"
-        android:text="in adalah text nya bos akhirnng nih"
-        android:textColor="@android:color/black" />
+        android:background="@drawable/bubble_outgoing"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/tv_time_chat_outgoing"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="8dp"
-        android:text="10:10 PM"
-        android:textSize="12sp" />
+        <LinearLayout
+            android:id="@+id/layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            app:layout_constraintRight_toLeftOf="@id/tv_time_chat_outgoing"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/layout_first">
+
+            <TextView
+                android:id="@+id/tv_chat_outgoing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ini adalah yanhgjhg jhg ghjhgjhg  labissmillah semoga bisa afdlskfjfasdfah"
+                android:textColor="@android:color/black" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_time_chat_outgoing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10:10 PM"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/layout_first"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,18 +10,20 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.iceka.whatsappclone.R;
 import com.iceka.whatsappclone.models.StatusItem;
-import com.iceka.whatsappclone.models.StatusText;
+import com.iceka.whatsappclone.models.Viewed;
 
 import java.util.List;
 
 public class StatusFlipperAdapter extends BaseAdapter {
 
     private List<StatusItem> statusItemList;
+    private List<Viewed> viewedList;
     private Context mContext;
     private ProgressBar[] mProgressBar;
 
@@ -52,10 +54,19 @@ public class StatusFlipperAdapter extends BaseAdapter {
         ImageView image = view.findViewById(R.id.img_status_picture);
         RelativeLayout layout = view.findViewById(R.id.layout_item_status_text);
         TextView text = view.findViewById(R.id.tv_text_item_status);
+        TextView viewCount = view.findViewById(R.id.tv_seen_count);
+
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference mStatusReference = firebaseDatabase.getReference().child("status");
 
         StatusItem statusItem = statusItemList.get(i);
 
-        Log.i("MYTAG", "TYPE : " + statusItem.getType());
+
+//        Toast.makeText(view.getContext(), "text : " + statusItem.getText(), Toast.LENGTH_SHORT).show();
+        if (viewedList != null) {
+            Log.i("MYTAG", "viewed : " + viewedList.size());
+        }
+
         if (statusItem.getType().equals("image")) {
             image.setVisibility(View.VISIBLE);
             Glide.with(mContext.getApplicationContext())
@@ -66,7 +77,7 @@ public class StatusFlipperAdapter extends BaseAdapter {
             text.setVisibility(View.VISIBLE);
             layout.setBackgroundColor(statusItem.getBackgroundColor());
             text.setText(statusItem.getText());
-            Toast.makeText(mContext, "text: " + statusItem.getText(), Toast.LENGTH_SHORT).show();
+//            viewCount.setText(statusItem.getViewed());
         }
 //        StatusText statusText = statusTextList.get(i);
 //        Toast.makeText(mContext, "posisi : " + statusText.getText(), Toast.LENGTH_SHORT).show();

@@ -1,123 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/parent_layout"
     android:background="@android:color/black"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true"
+    tools:context=".MainActivity">
 
-    <FrameLayout
+    <TextureView
+        android:id="@+id/textureview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/black">
+        android:layout_marginTop="48dp"
+        android:layout_marginBottom="76dp" />
 
-        <SurfaceView
-            android:id="@+id/imgSurface"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="visible" />
+    <ImageView
+        android:id="@+id/img_scroll_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_keyboard_arrow_up_white_24dp"
+        android:layout_above="@id/rv_image_galery"
+        android:layout_centerHorizontal="true" />
 
-        <TextView
-            android:id="@+id/textCounter"
-            android:layout_width="wrap_content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:layout_above="@id/layout_button"
+        android:layout_marginBottom="12dp"
+        android:id="@+id/rv_image_galery" />
+
+    <LinearLayout
+        android:id="@+id/layout_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/tv_info"
+        android:gravity="center"
+        android:weightSum="100"
+        android:layout_marginBottom="4dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:layout_weight="30"
+            android:src="@drawable/ic_flash_auto_white_24dp"
+            android:id="@+id/img_flash" />
+
+        <ImageView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/background_recording"
-            android:drawableLeft="@drawable/red_dot2"
-            android:drawablePadding="10dp"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="00:00"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:layout_gravity="center_vertical"
+            android:layout_weight="40"
+            android:src="@drawable/circle_capture"
+            android:id="@+id/img_capture" />
 
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:layout_weight="30"
+            android:src="@drawable/ic_switch_camera_white_24dp"
+            android:id="@+id/img_switch" />
 
-        <LinearLayout
-            android:id="@+id/llImageModificationBottomOptions"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="bottom"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:gravity="bottom"
-            android:orientation="vertical">
+    </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hold for video, tap for photo"
+        android:textColor="@android:color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="7dp" />
 
-            <ImageView
-                android:id="@+id/imgImageDisplay"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="0.25"
-                android:background="@android:color/transparent"
-                android:orientation="horizontal"
-                android:visibility="invisible" />
-
-            <RelativeLayout
-                android:id="@+id/rlCaptureOption"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="0.75"
-                android:orientation="horizontal"
-                android:visibility="visible">
-
-                <ImageView
-                    android:id="@+id/imgChangeCamera"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center_vertical"
-                    android:paddingEnd="16dp"
-                    android:paddingRight="16dp"
-                    android:src="@drawable/ic_switch_camera_white_24dp" />
-
-
-                <LinearLayout
-                    android:id="@+id/middleLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/imgCapture"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_gravity="center_horizontal|center_vertical"
-                        android:src="@drawable/ic_radio_button_unchecked_black_24dp" />
-
-                    <TextView
-
-                        android:id="@+id/hintTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="Hold for video, tap for photoUrl"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-
-                <ImageView
-                    android:id="@+id/imgFlashOnOff"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:paddingLeft="16dp"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_flash_off_white_24dp" />
-
-
-            </RelativeLayout>
-
-
-        </LinearLayout>
-    </FrameLayout>
-
-</LinearLayout>
+</RelativeLayout>

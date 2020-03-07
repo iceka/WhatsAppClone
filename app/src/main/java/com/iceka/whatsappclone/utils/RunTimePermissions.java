@@ -29,7 +29,7 @@ public class RunTimePermissions extends Activity {
 
     public void requestPermission(String[] permission, RunTimePermissionListener runTimePermissionListener) {
         this.mRunTimePermissionListener = runTimePermissionListener;
-        arrayListPermission = new ArrayList<PermissionBean>();
+        arrayListPermission = new ArrayList<>();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             for (String s : permission) {

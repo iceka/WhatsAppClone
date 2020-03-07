@@ -1,13 +1,17 @@
 package com.iceka.whatsappclone;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,11 +20,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
+import com.iceka.whatsappclone.fragments.StatusTabFragment;
 import com.iceka.whatsappclone.models.StatusItem;
 import com.iceka.whatsappclone.models.Viewed;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -108,14 +118,22 @@ public class StatusTextActivity extends AppCompatActivity {
 
     private void postData() {
         int backgroundColor = ((ColorDrawable) mLayout.getBackground()).getColor();
-        long timestamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+        long timestamp = System.currentTimeMillis();
         long expireTime = timestamp + TimeUnit.MILLISECONDS.convert(1, TimeUnit.MINUTES);
         List<Viewed> views = new ArrayList<>();
         Viewed viewed = new Viewed();
         DatabaseReference newRef = mStatusReference.child(mFirebaseUser.getUid()).child("statusItem").push();
 
+        mLayout.setDrawingCacheEnabled(true);
+        mLayout.buildDrawingCache();
+        Bitmap bitmap = mLayout.getDrawingCache();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
 //        StatusText statusText = new StatusText(mText.getText().toString(), timestamp, expireTime,  backgroundColor, null, newRef.getKey());
-        StatusItem statusItem = new StatusItem(newRef.getKey(), "text", mText.getText().toString(), timestamp, expireTime, backgroundColor, null);
+        StatusItem statusItem = new StatusItem(newRef.getKey(), "text", mText.getText().toString(), timestamp, timestamp, backgroundColor, encoded, null);
         mStatusReference.child(mFirebaseUser.getUid()).child("uid").setValue(mFirebaseUser.getUid());
         mStatusReference.child(mFirebaseUser.getUid()).child("allseen").removeValue();
 //        mStatusReference.child(mFirebaseUser.getUid()).child("typeStatus").push().setValue(statusText);

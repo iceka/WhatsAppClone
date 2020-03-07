@@ -4,15 +4,19 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,16 +35,18 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.iceka.whatsappclone.CameraActivity;
 import com.iceka.whatsappclone.R;
 import com.iceka.whatsappclone.ShowMyStatusActivity;
 import com.iceka.whatsappclone.StatusTextActivity;
 import com.iceka.whatsappclone.adapters.StatusAdapter;
 import com.iceka.whatsappclone.models.Status;
 import com.iceka.whatsappclone.models.StatusItem;
-import com.iceka.whatsappclone.models.StatusText;
 import com.iceka.whatsappclone.models.Viewed;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -52,21 +58,24 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class StatusTabFragment extends Fragment {
 
     private DatabaseReference mStatusReference;
+    private FirebaseUser mFirebaseUser;
 
     private String myId;
     BroadcastReceiver broadcastReceiver;
 
+    private CircleImageView mAvatar;
     private TextView mTimeStatus;
     private RelativeLayout layout;
     private CircularStatusView mCircularStatusCount;
     private RecyclerView mRecentStatusRv;
     private RecyclerView mViewedStatusRv;
+    private LinearLayout mLayoutRecentStatus;
+    private LinearLayout mLayoutViewedStatus;
 
 
     private static final String TAG = "MYTAG";
 
     private List<StatusItem> statusItemList = new ArrayList<>();
-    private List<StatusItem> statusItemListViewed = new ArrayList<>();
     private List<Status> statusList = new ArrayList<>();
     private List<Status> statusListViewed = new ArrayList<>();
     private List<String> viewedList = new ArrayList<>();
@@ -77,33 +86,42 @@ public class StatusTabFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_status_tab, container, false);
         setHasOptionsMenu(true);
 
-        CircleImageView avatar = rootView.findViewById(R.id.avatar_user_status);
+        mAvatar = rootView.findViewById(R.id.avatar_user_status);
         mTimeStatus = rootView.findViewById(R.id.tv_time_status);
         layout = rootView.findViewById(R.id.layout_self_status);
         mCircularStatusCount = rootView.findViewById(R.id.circular_status_count);
         mRecentStatusRv = rootView.findViewById(R.id.rv_recent_updates_status);
         mViewedStatusRv = rootView.findViewById(R.id.rv_viewed_updates_status);
+        mLayoutRecentStatus = rootView.findViewById(R.id.layout_recent_updates_status);
+        mLayoutViewedStatus = rootView.findViewById(R.id.layout_viewed_updates_status);
 
+        final LinearLayout linearLayout = rootView.findViewById(R.id.test_layout);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         RecyclerView.LayoutManager viewedLayoutManager = new LinearLayoutManager(getContext());
         mRecentStatusRv.setLayoutManager(layoutManager);
         mViewedStatusRv.setLayoutManager(viewedLayoutManager);
-//        mRecentStatusRv.setItemAnimator(new DefaultItemAnimator());
 
         FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
         mStatusReference = FirebaseDatabase.getInstance().getReference().child("status");
         myId = mFirebaseAuth.getCurrentUser().getUid();
+//
+//        if (statusList.isEmpty()) {
+//            mLayoutRecentStatus.setVisibility(View.GONE);
+//            Log.i("MYTAG", "listnya : " + statusList);
+//        }
+
+        if (statusListViewed.isEmpty()) {
+            mLayoutViewedStatus.setVisibility(View.GONE);
+        }
+
+        Log.i("MYTAG", "before : " + statusList.size());
 
         getMyStatus();
         getOtherStatus();
         getViewed();
         checkStatusViewed();
-
-        Glide.with(getActivity())
-                .load(mFirebaseUser.getPhotoUrl())
-                .into(avatar);
 
         broadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -113,6 +131,7 @@ public class StatusTabFragment extends Fragment {
                 }
             }
         };
+
 
         getActivity().registerReceiver(broadcastReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
         return rootView;
@@ -156,13 +175,40 @@ public class StatusTabFragment extends Fragment {
                 if (dataSnapshot.exists()) {
                     int count = (int) dataSnapshot.getChildrenCount();
                     mCircularStatusCount.setPortionsCount(count);
+                    DatabaseReference cek = dataSnapshot.getRef();
+                    Query query = cek.orderByKey().limitToLast(1);
+                    query.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                if (dataSnapshot.exists()) {
+                                    StatusItem statusItem = snapshot.getValue(StatusItem.class);
+                                    byte[] byteArray = Base64.decode(statusItem.getThumbnail(), Base64.DEFAULT);
+                                    Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+                                    Glide.with(getContext())
+                                            .load(bitmap)
+                                            .into(mAvatar);
+                                } else {
+                                    Glide.with(getContext())
+                                            .load(mFirebaseUser.getPhotoUrl())
+                                            .into(mAvatar);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        StatusText statusText = snapshot.getValue(StatusText.class);
+                        StatusItem statusItem = snapshot.getValue(StatusItem.class);
                         mCircularStatusCount.setVisibility(View.VISIBLE);
-                        assert statusText != null;
-                        long timeFromServer = statusText.getTimestamp();
+                        assert statusItem != null;
+                        long timeFromServer = statusItem.getTimestamp();
                         Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
-                        calendar.setTimeInMillis(timeFromServer * 1000);
+                        calendar.setTimeInMillis(timeFromServer);
                         long co = calendar.getTimeInMillis();
                         DateFormat.format("M/dd/yyyy", calendar);
                         CharSequence now = DateUtils.getRelativeTimeSpanString(co, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS);
@@ -178,13 +224,13 @@ public class StatusTabFragment extends Fragment {
                     layout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            startActivity(new Intent(getContext(), StatusTextActivity.class));
+                            startActivity(new Intent(getContext(), CameraActivity.class));
                         }
                     });
+                    Glide.with(getContext())
+                            .load(mFirebaseUser.getPhotoUrl())
+                            .into(mAvatar);
                     mCircularStatusCount.setVisibility(View.GONE);
-                    if (getActivity() != null) {
-                        Toast.makeText(getActivity(), "tidak bisa cuk ", Toast.LENGTH_SHORT).show();
-                    }
                     mTimeStatus.setText("Tap to add status");
                 }
             }
@@ -202,18 +248,25 @@ public class StatusTabFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 statusItemList.clear();
                 statusList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if (snapshot.exists()) {
-                        Status status = snapshot.getValue(Status.class);
-                        if (!status.getUid().equals(myId)) {
-                            statusList.add(status);
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        if (snapshot.exists()) {
+                            Status status = snapshot.getValue(Status.class);
+                            if (!status.getUid().equals(myId) && status.getStatuscount() > 0) {
+                                statusList.add(status);
+                                Log.i("MYTAG", "Test : " + statusList);
+                                mLayoutRecentStatus.setVisibility(View.VISIBLE);
+                            } else {
+                                mLayoutRecentStatus.setVisibility(View.GONE);
+                            }
+                            StatusAdapter adapter = new StatusAdapter(getActivity(), statusList);
+                            mRecentStatusRv.setAdapter(adapter);
+                        } else {
+                            mLayoutRecentStatus.setVisibility(View.GONE);
                         }
-                        StatusAdapter adapter = new StatusAdapter(getActivity(), statusList);
-                        mRecentStatusRv.setAdapter(adapter);
-                    } else {
-                        Toast.makeText(getActivity(), "no data", Toast.LENGTH_SHORT).show();
                     }
                 }
+
             }
 
             @Override
@@ -224,21 +277,40 @@ public class StatusTabFragment extends Fragment {
     }
 
     private void checkStatusExpire() {
-        mStatusReference.child(myId).child("typeStatus").addListenerForSingleValueEvent(new ValueEventListener() {
+        mStatusReference.child(myId).child("statusItem").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    StatusText statusText = snapshot.getValue(StatusText.class);
+                    StatusItem statusItem = snapshot.getValue(StatusItem.class);
                     List<Long> timeList = new ArrayList<>();
-                    timeList.add(statusText.getTimestamp());
+                    timeList.add(statusItem.getTimestamp());
+                    Log.i("MYTAG", "KEY : " + dataSnapshot.getKey());
                     for (long tesa : timeList) {
-                        tesa = tesa * 1000 + TimeUnit.MILLISECONDS.convert(10, TimeUnit.HOURS);
-                        long timeNow = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) * 1000;
+                        tesa = tesa + TimeUnit.MILLISECONDS.convert(3, TimeUnit.MINUTES);
+                        long timeNow = System.currentTimeMillis();
                         if (tesa <= timeNow) {
                             snapshot.getRef().removeValue();
-                            Log.i(TAG, "remove ");
                         }
-                        Log.i(TAG, "Timestampnya : " + tesa);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        Query query = mStatusReference.child(myId).child("statusItem").orderByKey().limitToLast(1);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    StatusItem statusItem1 = snapshot.getValue(StatusItem.class);
+                    long tes = statusItem1.getTimestamp() + TimeUnit.MILLISECONDS.convert(3, TimeUnit.MINUTES);
+                    long now = System.currentTimeMillis();
+                    if (tes <= now) {
+                        mStatusReference.child(myId).child("allseen").removeValue();
                     }
                 }
             }
@@ -255,31 +327,33 @@ public class StatusTabFragment extends Fragment {
         mStatusReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     final Status status = snapshot.getValue(Status.class);
-//                   Log.i("MYTAG", "hasil sblm : " + status.getUid());
                     mStatusReference.child(status.getUid()).child("allseen").addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
-                                Viewed viewed = snapshot1.getValue(Viewed.class);
-                                if (viewed.getUid().equals(myId)) {
-                                    String cek = viewed.getUid();
-                                    Log.i("MYTAG", "hasil : " + status.getUid());
-                                    for (int i = 0; i < statusList.size(); i++) {
-                                        if (statusList.get(i).getUid().equals(status.getUid())) {
-                                            Log.i("MYTAG", "cobasaja : " + statusList.get(i).getUid());
-                                            statusList.remove(i);
+                            if (dataSnapshot.exists()) {
+                                for (DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
+                                    Viewed viewed = snapshot1.getValue(Viewed.class);
+                                    statusListViewed.clear();
+                                    if (viewed.getUid().equals(myId)) {
+                                        for (int i = 0; i < statusList.size(); i++) {
+                                            if (statusList.get(i).getUid().equals(status.getUid())) {
+                                                statusList.remove(i);
+                                            }
                                         }
+                                        statusListViewed.add(status);
+                                        StatusAdapter adapter = new StatusAdapter(getActivity(), statusListViewed);
+                                        mViewedStatusRv.setAdapter(adapter);
                                     }
-                                    statusListViewed.add(status);
 
-                                    StatusAdapter adapter = new StatusAdapter(getActivity(), statusListViewed);
-                                    mViewedStatusRv.setAdapter(adapter);
-                                    Toast.makeText(getContext(), "TRUE", Toast.LENGTH_SHORT).show();
                                 }
-
+                            } else {
+                                for (int i = 0; i < statusListViewed.size(); i++) {
+                                    statusListViewed.remove(i);
+                                }
                             }
+
                         }
 
                         @Override
@@ -309,4 +383,5 @@ public class StatusTabFragment extends Fragment {
         super.onDestroy();
         getActivity().unregisterReceiver(broadcastReceiver);
     }
+
 }

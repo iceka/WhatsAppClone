@@ -79,8 +79,8 @@ public class EditStatusActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Uri uri) {
                         DatabaseReference newRef = mStatusReference.child(mFirebaseUser.getUid()).child("statusItem").push();
-                        StatusItem statusItem = new StatusItem(newRef.getKey(), "image", uri.toString(), mEditText.getText().toString(), timestamp, expireTime, null);
-                        newRef.setValue(statusItem);
+//                        StatusItem statusItem = new StatusItem(newRef.getKey(), "image", uri.toString(), mEditText.getText().toString(), timestamp, expireTime, null);
+//                        newRef.setValue(statusItem);
                         finish();
                     }
                 });

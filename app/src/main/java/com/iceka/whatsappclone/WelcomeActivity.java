@@ -44,25 +44,25 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if (mFirebaseAuth.getCurrentUser() != null) {
-            onAuthSuccess(mFirebaseAuth.getCurrentUser());
+            onAuthSuccess();
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            if (resultCode == RESULT_OK) {
-                startActivity(new Intent(this, MainActivity.class));
-                Toast.makeText(this, "Signed in, success", Toast.LENGTH_SHORT).show();
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, "Sign in cancelled", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == RC_SIGN_IN) {
+//            if (resultCode == RESULT_OK) {
+//                startActivity(new Intent(this, MainActivity.class));
+//                Toast.makeText(this, "Signed in, success", Toast.LENGTH_SHORT).show();
+//            } else if (resultCode == RESULT_CANCELED) {
+//                Toast.makeText(this, "Sign in cancelled", Toast.LENGTH_SHORT).show();
+//                finish();
+//            }
+//        }
+//    }
 
-    private void onAuthSuccess(FirebaseUser user) {
+    private void onAuthSuccess() {
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
