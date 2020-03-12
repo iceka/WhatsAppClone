@@ -26,11 +26,12 @@
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
-        android:padding="16dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar_create_profile"
-        android:orientation="vertical">
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/tv_etc"
@@ -38,6 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/toolbar_create_profile"
             android:layout_centerHorizontal="true"
+            android:gravity="center"
             android:text="Please provide your name and an optional profile photoUrl" />
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -46,7 +48,7 @@
             android:layout_height="120dp"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:src="@drawable/ic_add_a_photo_black_24dp"
+            android:src="@drawable/ic_person_black_24dp"
             app:civ_circle_background_color="#27343C" />
 
         <LinearLayout
@@ -84,5 +86,12 @@
         android:background="#25d366"
         android:text="next"
         android:textColor="@android:color/white" />
+
+    <ProgressBar
+        android:visibility="gone"
+        android:id="@+id/progressbar_create_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>

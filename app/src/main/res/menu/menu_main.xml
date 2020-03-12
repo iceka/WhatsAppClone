@@ -39,4 +39,10 @@
         android:title="Settings"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/logout"
+        android:orderInCategory="7"
+        android:title="Log Out"
+        app:showAsAction="never" />
+
 </menu>

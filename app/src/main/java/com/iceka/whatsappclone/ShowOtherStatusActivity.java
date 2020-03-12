@@ -93,55 +93,6 @@ public class ShowOtherStatusActivity extends AppCompatActivity {
         showStatus();
     }
 
-  /*  // newest
-    private void showStatus() {
-        Query myQuery = mStatusReference.orderByKey().startAt(id);
-        myQuery.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    mStatusReference.child(snapshot.getKey()).child("statusItem").addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
-                                StatusItem statusItem = snapshot1.getValue(StatusItem.class);
-                                statusItemList.add(statusItem);
-                                mAdapter = new StatusFlipperAdapter(getApplicationContext(), statusItemList);
-                                mAdapterViewFlipper.setAdapter(mAdapter);
-                                mAdapterViewFlipper.setFlipInterval(2500);
-                                flipperCount = mAdapterViewFlipper.getCount();
-                                mAdapterViewFlipper.startFlipping();
-                            }
-                            mProgressBar = new ProgressBar[flipperCount];
-                            for (int i = 0; i < flipperCount; i++) {
-                                mProgressBar[i] = new ProgressBar(getApplicationContext(), null, android.R.attr.progressBarStyleHorizontal);
-                                mProgressBar[i].setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-                                setMargins(mProgressBar[i]);
-                                setProgressMax(mProgressBar[i]);
-                                mProgressBar[i].getProgress();
-                                ViewGroup mViewGroup = findViewById(R.id.parent_progress_bar_layout);
-                                mViewGroup.addView(mProgressBar[i]);
-                            }
-//                            ProgressBar progressBar = new ProgressBar(getApplicationContext(), null, android.R.attr.progressBarStyleHorizontal);
-//                            ViewGroup mViewGroup = findViewById(R.id.parent_progress_bar_layout);
-//                            mViewGroup.addView(progressBar);
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }*/
-
     private void showStatus() {
         mUserReference.child(id).addValueEventListener(new ValueEventListener() {
             @Override
@@ -192,7 +143,6 @@ public class ShowOtherStatusActivity extends AppCompatActivity {
                             DateFormat.format("M/dd/yyyy", calendar);
                             CharSequence now = DateUtils.getRelativeTimeSpanString(co, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS);
                             mDate.setText(now);
-                            Toast.makeText(ShowOtherStatusActivity.this, "cek : " + statusItem.getText(), Toast.LENGTH_SHORT).show();
                             if (id.equals(myId)) {
                                 mViewedCount.setVisibility(View.VISIBLE);
                             } else {
@@ -229,7 +179,6 @@ public class ShowOtherStatusActivity extends AppCompatActivity {
                                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                     if (!dataSnapshot.exists()) {
                                                         mStatusReference.child(id).child("allseen").child(myId).setValue(viewed);
-                                                        Log.i("MYTAG", "starting");
                                                     }
 
                                                 }

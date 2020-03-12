@@ -72,7 +72,6 @@ public class StatusTabFragment extends Fragment {
     private LinearLayout mLayoutRecentStatus;
     private LinearLayout mLayoutViewedStatus;
 
-
     private static final String TAG = "MYTAG";
 
     private List<StatusItem> statusItemList = new ArrayList<>();
@@ -95,8 +94,6 @@ public class StatusTabFragment extends Fragment {
         mLayoutRecentStatus = rootView.findViewById(R.id.layout_recent_updates_status);
         mLayoutViewedStatus = rootView.findViewById(R.id.layout_viewed_updates_status);
 
-        final LinearLayout linearLayout = rootView.findViewById(R.id.test_layout);
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         RecyclerView.LayoutManager viewedLayoutManager = new LinearLayoutManager(getContext());
         mRecentStatusRv.setLayoutManager(layoutManager);
@@ -106,17 +103,6 @@ public class StatusTabFragment extends Fragment {
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
         mStatusReference = FirebaseDatabase.getInstance().getReference().child("status");
         myId = mFirebaseAuth.getCurrentUser().getUid();
-//
-//        if (statusList.isEmpty()) {
-//            mLayoutRecentStatus.setVisibility(View.GONE);
-//            Log.i("MYTAG", "listnya : " + statusList);
-//        }
-
-        if (statusListViewed.isEmpty()) {
-            mLayoutViewedStatus.setVisibility(View.GONE);
-        }
-
-        Log.i("MYTAG", "before : " + statusList.size());
 
         getMyStatus();
         getOtherStatus();
@@ -131,7 +117,6 @@ public class StatusTabFragment extends Fragment {
                 }
             }
         };
-
 
         getActivity().registerReceiver(broadcastReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
         return rootView;
@@ -243,27 +228,35 @@ public class StatusTabFragment extends Fragment {
     }
 
     private void getOtherStatus() {
+        final List<Integer> countList = new ArrayList<>();
         mStatusReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 statusItemList.clear();
                 statusList.clear();
+                countList.clear();
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         if (snapshot.exists()) {
                             Status status = snapshot.getValue(Status.class);
                             if (!status.getUid().equals(myId) && status.getStatuscount() > 0) {
+                                countList.add(status.getStatuscount());
                                 statusList.add(status);
-                                Log.i("MYTAG", "Test : " + statusList);
-                                mLayoutRecentStatus.setVisibility(View.VISIBLE);
-                            } else {
-                                mLayoutRecentStatus.setVisibility(View.GONE);
                             }
                             StatusAdapter adapter = new StatusAdapter(getActivity(), statusList);
                             mRecentStatusRv.setAdapter(adapter);
-                        } else {
-                            mLayoutRecentStatus.setVisibility(View.GONE);
                         }
+                    }
+
+                    int sum = 0;
+                    for (int num : countList) {
+                        sum = sum + num;
+                    }
+
+                    if (sum <= 0) {
+                        mLayoutRecentStatus.setVisibility(View.GONE);
+                    } else {
+                        mLayoutRecentStatus.setVisibility(View.VISIBLE);
                     }
                 }
 
@@ -286,7 +279,7 @@ public class StatusTabFragment extends Fragment {
                     timeList.add(statusItem.getTimestamp());
                     Log.i("MYTAG", "KEY : " + dataSnapshot.getKey());
                     for (long tesa : timeList) {
-                        tesa = tesa + TimeUnit.MILLISECONDS.convert(3, TimeUnit.MINUTES);
+                        tesa = tesa + TimeUnit.MILLISECONDS.convert(3, TimeUnit.HOURS);
                         long timeNow = System.currentTimeMillis();
                         if (tesa <= timeNow) {
                             snapshot.getRef().removeValue();
@@ -307,7 +300,7 @@ public class StatusTabFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     StatusItem statusItem1 = snapshot.getValue(StatusItem.class);
-                    long tes = statusItem1.getTimestamp() + TimeUnit.MILLISECONDS.convert(3, TimeUnit.MINUTES);
+                    long tes = statusItem1.getTimestamp() + TimeUnit.MILLISECONDS.convert(3, TimeUnit.HOURS);
                     long now = System.currentTimeMillis();
                     if (tes <= now) {
                         mStatusReference.child(myId).child("allseen").removeValue();

@@ -17,16 +17,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ShareMediaActivity"></activity>
         <activity android:name=".SelectCountryCallingCodeActivity" />
         <activity android:name=".ShowMyStatusActivity" />
         <activity android:name=".EditStatusActivity" />
         <activity android:name=".ShowOtherStatusActivity" />
         <activity android:name=".ChatRoomActivity" />
-        <activity android:name=".CreateProfileActivity" />
+        <activity
+            android:name=".CreateProfileActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".InputPhoneNumberActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".PhoneVerifyActivity" />
+        <activity
+            android:name=".PhoneVerifyActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ContactActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".CameraActivity" />

@@ -79,33 +79,33 @@
         android:layout_height="match_parent"
         android:id="@+id/my_status_view_flipper" />
 
-    <LinearLayout
-        android:id="@+id/layout_viewed_by_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp">
+    <!--    <LinearLayout-->
+    <!--        android:id="@+id/layout_viewed_by_status"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:orientation="horizontal"-->
+    <!--        android:layout_centerHorizontal="true"-->
+    <!--        android:layout_alignParentBottom="true"-->
+    <!--        android:layout_marginBottom="20dp">-->
 
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_visibility_black_24dp" />
+    <!--        <ImageView-->
+    <!--            android:layout_width="20dp"-->
+    <!--            android:layout_height="20dp"-->
+    <!--            android:layout_gravity="center_vertical"-->
+    <!--            android:src="@drawable/ic_visibility_black_24dp" />-->
 
-        <TextView
-            android:id="@+id/tv_seen_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="4dp"
-            android:textSize="18sp" />
+    <!--        <TextView-->
+    <!--            android:id="@+id/tv_seen_count"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:text="0"-->
+    <!--            android:textStyle="bold"-->
+    <!--            android:textColor="@android:color/white"-->
+    <!--            android:layout_gravity="center_vertical"-->
+    <!--            android:layout_marginLeft="4dp"-->
+    <!--            android:textSize="18sp" />-->
 
-    </LinearLayout>
+    <!--    </LinearLayout>-->
 
 
 </RelativeLayout>

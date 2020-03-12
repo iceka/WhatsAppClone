@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -22,6 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.iceka.whatsappclone.adapters.TabAdapter;
+import com.iceka.whatsappclone.fragments.CameraTabFragment;
 
 import java.util.concurrent.TimeUnit;
 
@@ -103,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
                     case 0:
                         mFabTop.hide();
                         mFabBottom.hide();
+//                        CameraTabFragment cameraTabFragment = new CameraTabFragment();
+//                        cameraTabFragment.startCamera();
                         break;
                     case 1:
                         mFabBottom.hide();
@@ -215,6 +220,18 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logout:
+                mFirebaseAuth.signOut();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
     @Override

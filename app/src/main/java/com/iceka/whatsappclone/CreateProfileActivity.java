@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -34,16 +35,19 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CreateProfileActivity extends AppCompatActivity {
 
+    private static final int RC_PHOTO_PICKER = 2;
+
     private FirebaseDatabase mFirebaseDatabase;
     private FirebaseAuth mFirebaseAuth;
-    private DatabaseReference mDatabaseReference;
+    private DatabaseReference mUserReference;
     private FirebaseUser mFirebaseUser;
-    private static final int RC_PHOTO_PICKER = 2;
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mStorageReference;
+
     private Button mBtNext;
     private EditText mEtUsername;
     private CircleImageView mImgAvatar;
+    private ProgressBar mProgressBar;
     private Uri selectedImage;
     private Uri storageAvatar;
     private Context mContext;
@@ -57,13 +61,14 @@ public class CreateProfileActivity extends AppCompatActivity {
         mBtNext = findViewById(R.id.bt_next_main);
         mEtUsername = findViewById(R.id.et_create_profile_username);
         mImgAvatar = findViewById(R.id.img_avatar_create);
+        mProgressBar = findViewById(R.id.progressbar_create_profile);
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseStorage = FirebaseStorage.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
-        mDatabaseReference = mFirebaseDatabase.getReference().child("users").child(mFirebaseUser.getUid());
+        mUserReference = mFirebaseDatabase.getReference().child("users").child(mFirebaseUser.getUid());
         mStorageReference = mFirebaseStorage.getReference().child("avatar").child(mFirebaseUser.getUid());
 
         mImgAvatar.setOnClickListener(new View.OnClickListener() {
@@ -79,7 +84,7 @@ public class CreateProfileActivity extends AppCompatActivity {
         mBtNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                mProgressBar.setVisibility(View.VISIBLE);
                 createUserData();
             }
         });
@@ -106,7 +111,7 @@ public class CreateProfileActivity extends AppCompatActivity {
     }
 
     private void createUserData() {
-        mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        mUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.exists()) {
@@ -129,17 +134,15 @@ public class CreateProfileActivity extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-                                                Toast.makeText(CreateProfileActivity.this, "Berhasil di update", Toast.LENGTH_SHORT).show();
                                                 Intent intent = new Intent(CreateProfileActivity.this, MainActivity.class);
                                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                 startActivity(intent);
-                                            } else {
-                                                Toast.makeText(CreateProfileActivity.this, "Gagal update", Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                     });
                                     User user = new User(mFirebaseUser.getUid(), username, mFirebaseUser.getPhoneNumber(), uri.toString(), defaultProfileAbout, true, 0);
-                                    mDatabaseReference.setValue(user);
+                                    mUserReference.setValue(user);
+                                    mProgressBar.setVisibility(View.GONE);
                                 }
                             });
                         }
@@ -151,7 +154,7 @@ public class CreateProfileActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(CreateProfileActivity.this, "entahlah : " + databaseError.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(CreateProfileActivity.this, "Error : " + databaseError.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 

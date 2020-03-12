@@ -16,19 +16,19 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:id="@+id/layout"
+            android:id="@+id/layout_chat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
             app:layout_constraintRight_toLeftOf="@id/tv_time_chat_outgoing"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/layout_first">
+            <!--            app:layout_constraintEnd_toStartOf="@id/tv_time_chat_outgoing"-->
 
             <TextView
                 android:id="@+id/tv_chat_outgoing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ini adalah yanhgjhg jhg ghjhgjhg  labissmillah semoga bisa afdlskfjfasdfah"
+                android:text="ini adalah yanhgjhskfjfasdfah"
                 android:textColor="@android:color/black" />
         </LinearLayout>
 
@@ -38,6 +38,7 @@
             android:layout_height="wrap_content"
             android:text="10:10 PM"
             android:textSize="12sp"
+            android:layout_marginLeft="6dp"
             app:layout_constraintBottom_toBottomOf="@id/layout_first"
             app:layout_constraintRight_toRightOf="parent" />
 

@@ -31,15 +31,11 @@ import java.util.List;
 
 public class ChatTabFragment extends Fragment {
 
-    private static final String TAG = "LOG Example";
-
     private RecyclerView mRecyclerView;
     private LinearLayout mStartChatLayout;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mConversationReference;
-    private DatabaseReference mStatusReference;
-    private DatabaseReference mUserReference;
     private FirebaseAuth mAuth;
     private FirebaseUser mFirebaseUser;
 
@@ -57,7 +53,6 @@ public class ChatTabFragment extends Fragment {
         mStartChatLayout = rootView.findViewById(R.id.layout_start_chat);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
         mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -68,28 +63,14 @@ public class ChatTabFragment extends Fragment {
         mFirebaseUser = mAuth.getCurrentUser();
 
         mConversationReference = mFirebaseDatabase.getReference().child("conversation").child(mFirebaseUser.getUid());
-        mUserReference = mFirebaseDatabase.getReference().child("users");
-        mStatusReference = mFirebaseDatabase.getReference().child("status");
 
+        getData();
+
+        return rootView;
+    }
+
+    private void getData() {
         Query myQuery = mConversationReference.orderByChild("timestamp");
-//        myQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                conversationList.clear();
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    Conversation conversation = snapshot.getValue(Conversation.class);
-//                    conversationList.add(conversation);
-//                    mAdapter = new ChatListAdapter(getActivity(), conversationList, userList);
-//                    mRecyclerView.setAdapter(mAdapter);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-
         myQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -99,34 +80,10 @@ public class ChatTabFragment extends Fragment {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         Conversation conversation = snapshot.getValue(Conversation.class);
                         conversationList.add(conversation);
-
-//                    userList.clear();
-
-//                    key = snapshot.getKey();
-//                    personId = snapshot.child("chatWithId").getValue(String.class);
-//
-//                    Query query = mUserReference.orderByKey().equalTo(personId);
-//                    query.addValueEventListener(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                                User user = snapshot.getValue(User.class);
-//                                userList.add(user);
-//                            }
                         mAdapter = new ChatListAdapter(getActivity(), conversationList, userList);
                         mRecyclerView.setAdapter(mAdapter);
-//
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                        }
-//                    });
                     }
                 }
-
-
             }
 
             @Override
@@ -134,39 +91,6 @@ public class ChatTabFragment extends Fragment {
 
             }
         });
-
-
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.add(Calendar.MINUTE, 2);
-//        long cutOff = new Date().getTime() - TimeUnit.MILLISECONDS.convert(2, TimeUnit.MINUTES);
-//        Query oldStatus = mStatusReference.child(mFirebaseUser.getUid()).child("typeStatus").orderByChild("timestamp").startAt(calendar.getTimeInMillis());
-//        oldStatus.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    snapshot.getRef().removeValue();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-
-        /*try {
-            String data = "2019-09-04T05:03:27.322Z";
-            SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
-            input.setTimeZone(TimeZone.getTimeZone("UTC"));
-            SimpleDateFormat output = new SimpleDateFormat("EEE, dd-MM-yyyy hh:mm a", Locale.ENGLISH);
-            output.setTimeZone(TimeZone.getDefault());
-            Date date = input.parse(data);
-            Toast.makeText(getContext(), "date : " + output.format(date), Toast.LENGTH_SHORT).show();output.format(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }*/
-
-        return rootView;
     }
 
 }

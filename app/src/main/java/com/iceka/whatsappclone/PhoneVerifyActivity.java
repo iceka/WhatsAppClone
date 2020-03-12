@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,7 +37,6 @@ public class PhoneVerifyActivity extends AppCompatActivity {
 
     private String phoneNumber;
     private String verificationId;
-    private int counter;
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
@@ -49,6 +49,8 @@ public class PhoneVerifyActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private TextView mToolbarTitle;
     private TextView mTvCountdownSMS;
+
+    private ProgressDialog mProgressDialog;
 
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallback = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
@@ -64,7 +66,8 @@ public class PhoneVerifyActivity extends AppCompatActivity {
             if (code != null) {
                 Log.i("TESTAJA", "code : " + code);
                 mEtCode.setText(code);
-                verifyCode(code);
+                showProgressDialog(code);
+//                verifyCode(code);
             }
         }
 
@@ -98,28 +101,15 @@ public class PhoneVerifyActivity extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
 
-        Toast.makeText(this, "phone number : " + phoneNumber, Toast.LENGTH_SHORT).show();
         sendVerificationCode(phoneNumber);
 
-        new CountDownTimer(130000, 1000) {
-
-            @Override
-            public void onTick(long l) {
-                mTvCountdownSMS.setText(String.valueOf(l / 1000));
-//                counter++;
-            }
-
-            @Override
-            public void onFinish() {
-                Toast.makeText(PhoneVerifyActivity.this, "Finish!", Toast.LENGTH_SHORT).show();
-            }
-        }.start();
+        mProgressDialog = new ProgressDialog(this);
 
         mBtNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String code = mEtCode.getText().toString();
-                verifyCode(code);
+                showProgressDialog(code);
             }
         });
     }
@@ -152,6 +142,35 @@ public class PhoneVerifyActivity extends AppCompatActivity {
 
     private void sendVerificationCode(String number) {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(number, 60, TimeUnit.SECONDS, TaskExecutors.MAIN_THREAD, mCallback);
+    }
+
+    private void showProgressDialog(final String code) {
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setMessage("Verifying");
+        mProgressDialog.show();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int loading = 0;
+                while (loading < 100) {
+                    try {
+                        Thread.sleep(150);
+                        loading += 20;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                mProgressDialog.dismiss();
+                PhoneVerifyActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        verifyCode(code);
+                    }
+                });
+
+            }
+        }).start();
     }
 
 }

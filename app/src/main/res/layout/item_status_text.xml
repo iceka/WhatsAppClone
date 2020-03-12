@@ -46,7 +46,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:visibility="invisible"
         android:id="@+id/layout_viewed_by_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

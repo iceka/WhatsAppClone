@@ -62,8 +62,10 @@
                 android:id="@+id/tv_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
                 android:maxLines="1"
-                tools:text="This is a message from John Snow " />
+                android:layout_marginRight="6dp"
+                tools:text="This is a message from John Snow and Snow White from London" />
 
             <TextView
                 android:id="@+id/tv_unread_count"

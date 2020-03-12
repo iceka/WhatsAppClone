@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +15,6 @@ import android.widget.AdapterViewFlipper;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,13 +35,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ShowMyStatusActivity extends AppCompatActivity {
 
-    private AdapterViewFlipper mViewFlipper;
+    private AdapterViewFlipper mAdapterViewFlipper;
     private Toolbar mToolbar;
     private CircleImageView mAvatar;
     private TextView mUsername;
     private TextView mTime;
     private ProgressBar[] mProgressBar;
-    private TextView mSeenCount;
+//    private TextView mSeenCount;
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
@@ -50,18 +50,19 @@ public class ShowMyStatusActivity extends AppCompatActivity {
     private List<StatusItem> statusItemList = new ArrayList<>();
 
     private int flipperCount;
+    private ObjectAnimator animation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_my_status);
 
-        mViewFlipper = findViewById(R.id.my_status_view_flipper);
+        mAdapterViewFlipper = findViewById(R.id.my_status_view_flipper);
         mAvatar = findViewById(R.id.my_status_avatar);
         mUsername = findViewById(R.id.my_status_username);
         mTime = findViewById(R.id.my_status_time);
         mToolbar = findViewById(R.id.my_status_toolbar);
-        mSeenCount = findViewById(R.id.tv_seen_count);
+//        mSeenCount = findViewById(R.id.tv_seen_count);
 
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -76,22 +77,25 @@ public class ShowMyStatusActivity extends AppCompatActivity {
     }
 
     private void getMyStatus() {
+        final List<Integer> teslist = new ArrayList<>();
         mStatusReference.child(mFirebaseUser.getUid()).child("statusItem").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                teslist.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     StatusItem statusItem = snapshot.getValue(StatusItem.class);
                     statusItemList.add(statusItem);
+                    teslist.add((int) snapshot.child("viewed").getChildrenCount());
+
                     StatusFlipperAdapter adapter = new StatusFlipperAdapter(getApplicationContext(), statusItemList);
-                    mViewFlipper.setAdapter(adapter);
-                    mViewFlipper.setFlipInterval(2500);
-                    mViewFlipper.startFlipping();
-                    flipperCount = mViewFlipper.getCount();
+                    mAdapterViewFlipper.setAdapter(adapter);
+                    mAdapterViewFlipper.setFlipInterval(2500);
+                    flipperCount = mAdapterViewFlipper.getCount();
+                    mAdapterViewFlipper.startFlipping();
+
                     List<Viewed> viewedList = new ArrayList<>();
                     viewedList.add(statusItem.getViewed());
-//                    Log.i("MYTAG", "textnya aja : " + viewedList.size());
-                    mSeenCount.setText(String.valueOf(snapshot.child("viewed").getChildrenCount()));
-                    Log.i("MYTAG", "child view coun : " + snapshot.child("viewed").getChildrenCount());
+//                    mSeenCount.setText(String.valueOf(snapshot.child("viewed").getChildrenCount()));
                 }
                 mProgressBar = new ProgressBar[flipperCount];
                 for (int i = 0; i < flipperCount; i++) {
@@ -99,11 +103,43 @@ public class ShowMyStatusActivity extends AppCompatActivity {
                     mProgressBar[i].setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
                     Utility.setMargins(mProgressBar[i]);
                     Utility.setProgressMax(mProgressBar[i]);
+                    mProgressBar[i].setMax(100 * 100);
                     mProgressBar[i].getProgress();
                     ViewGroup mViewGroup = findViewById(R.id.my_status_parent_progressbar);
                     mViewGroup.addView(mProgressBar[i]);
 
+                    mAdapterViewFlipper.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+                        @Override
+                        public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
+                            setProgressAnimate(mProgressBar[mAdapterViewFlipper.getDisplayedChild()]);
+                            StatusItem statusItem = statusItemList.get(mAdapterViewFlipper.getDisplayedChild());
+                            if (mAdapterViewFlipper.getDisplayedChild() == mAdapterViewFlipper.getCount() - 1) {
+                                mAdapterViewFlipper.stopFlipping();
+                                animation.addListener(new Animator.AnimatorListener() {
+                                    @Override
+                                    public void onAnimationStart(Animator animator) {
 
+                                    }
+
+                                    @Override
+                                    public void onAnimationEnd(Animator animator) {
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void onAnimationCancel(Animator animator) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(Animator animator) {
+
+                                    }
+                                });
+                            }
+                            animation.start();
+                        }
+                    });
                 }
             }
 
@@ -112,6 +148,21 @@ public class ShowMyStatusActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void setProgressAnimate(ProgressBar pb) {
+        animation = ObjectAnimator.ofInt(pb, "progress", pb.getProgress(), 100 * 100);
+        animation.setDuration(2500);
+        animation.setInterpolator(new LinearInterpolator());
+//        animation.start();
+    }
+
+    private void setMargins(View view) {
+        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+            p.setMargins(0, 0, 8, 0);
+            view.requestLayout();
+        }
     }
 
 }

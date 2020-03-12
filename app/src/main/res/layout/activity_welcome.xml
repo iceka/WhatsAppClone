@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,30 +8,48 @@
     android:orientation="vertical"
     tools:context=".WelcomeActivity">
 
+    <TextView
+        android:id="@+id/tv_welcome_to_whatsapp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center_horizontal"
+        android:text="Welcome to WhatsApp"
+        android:textColor="#00897b"
+        android:textSize="28sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="230dp"
+        android:layout_weight="1"
+        android:adjustViewBounds="true"
+        android:src="@drawable/welcome_screen_image"
+        app:layout_constraintBottom_toTopOf="@id/bottom_layout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_welcome_to_whatsapp" />
+
     <LinearLayout
+        android:id="@+id/bottom_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/layout_from_ceka"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logo">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Welcome to WhatsApp"
-            android:textColor="#00897b"
-            android:textSize="28sp" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="230dp"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:src="@drawable/welcome_screen_image" />
-
-        <TextView
+            android:id="@+id/tv_privacy_policy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:layout_marginBottom="10dp"
             android:gravity="center"
             android:lineSpacingExtra="3dp"
             android:text="@string/term_of_service" />
@@ -46,18 +64,16 @@
             android:text="Agree and continue"
             android:textAllCaps="true"
             android:textColor="@android:color/white" />
-
     </LinearLayout>
-
 
     <LinearLayout
         android:id="@+id/layout_from_ceka"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
         android:layout_marginBottom="18dp"
-        android:layout_alignParentBottom="true">
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
             android:layout_width="wrap_content"
@@ -68,11 +84,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
             android:text="C E K A"
-            android:textColor="#2ECD69" />
+            android:textColor="#2ECD69"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

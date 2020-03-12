@@ -6,25 +6,17 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.TelephonyManager;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,21 +29,17 @@ import com.google.firebase.database.ValueEventListener;
 import com.iceka.whatsappclone.models.CountryCallingCode;
 
 public class InputPhoneNumberActivity extends AppCompatActivity {
-    private TextView mPhoneNumber;
-    private Toolbar mToolbar;
-    private TextView mTitle;
+
     private EditText mEtPhoneNumber;
     private EditText mCountryCode;
-    private Button mNext;
     private EditText mEtCountryName;
-    private Spinner mSpCountryCallingCode;
 
-    private String number;
+    private String mPhoneNumber;
     private static final int COUNTRY_REQUEST = 1;
     private String countryDialCode;
     private String countryName;
 
-    private AlertDialog.Builder mDialog;
+    private ProgressDialog mProgressDialog;
 
     private DatabaseReference mCountryCodesReference;
 
@@ -60,11 +48,10 @@ public class InputPhoneNumberActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_phone_number);
 
-        mToolbar = findViewById(R.id.toolbar_input_number);
-        mTitle = mToolbar.findViewById(R.id.toolbar_title_input_numbers);
+        Toolbar mToolbar = findViewById(R.id.toolbar_input_number);
         mEtPhoneNumber = findViewById(R.id.et_phone_number);
         mCountryCode = findViewById(R.id.et_country_code);
-        mNext = findViewById(R.id.bt_next_input_number);
+        Button mNext = findViewById(R.id.bt_next_input_number);
         mEtCountryName = findViewById(R.id.et_country_name);
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
@@ -75,12 +62,11 @@ public class InputPhoneNumberActivity extends AppCompatActivity {
 
         mEtPhoneNumber.requestFocus();
 
-        mEtPhoneNumber.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
         mNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                number = "+" + mCountryCode.getText().toString() + mEtPhoneNumber.getText().toString();
+                mPhoneNumber = "+" + mCountryCode.getText().toString() + mEtPhoneNumber.getText().toString();
                 if (mEtPhoneNumber.getText().toString().length() < 9) {
                     new AlertDialog.Builder(InputPhoneNumberActivity.this)
                             .setMessage("The phone number you entered is too short for the country: "
@@ -94,7 +80,7 @@ public class InputPhoneNumberActivity extends AppCompatActivity {
                             })
                             .show();
                 } else {
-                    showDialog();
+                    showProgressDialog();
                 }
             }
         });
@@ -108,6 +94,8 @@ public class InputPhoneNumberActivity extends AppCompatActivity {
                 startActivityForResult(intent, COUNTRY_REQUEST);
             }
         });
+
+        mProgressDialog = new ProgressDialog(this);
 
         getData();
     }
@@ -143,38 +131,13 @@ public class InputPhoneNumberActivity extends AppCompatActivity {
     }
 
     private void showDialog() {
-//        mDialog = new AlertDialog.Builder(InputPhoneNumberActivity.this);
-//        LayoutInflater inflater = getLayoutInflater();
-//        View dialogView = inflater.inflate(R.layout.dialog_phone_verify, null);
-//        mDialog.setView(dialogView);
-//        mDialog.setCancelable(true);
-//
-//        mPhoneNumber = dialogView.findViewById(R.id.tv_phone_number_dialog);
-//        mPhoneNumber.setText(number);
-//
-//        mDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                Intent intent = new Intent(InputPhoneNumberActivity.this, PhoneVerifyActivity.class);
-//                intent.putExtra("phonenumber", number);
-//                startActivity(intent);
-//            }
-//        });
-//
-//        mDialog.setNegativeButton("Edit", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                dialogInterface.dismiss();
-//            }
-//        });
-//        mDialog.show();
         AlertDialog.Builder builder = new AlertDialog.Builder(InputPhoneNumberActivity.this);
-        builder.setMessage("We will be verifying the phone number:" + "\n\n" + number + "\n\nIs this OK, or would you like to edit the number?")
+        builder.setMessage("We will be verifying the phone number:" + "\n\n" + mPhoneNumber + "\n\nIs this OK, or would you like to edit the number?")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Intent intent = new Intent(InputPhoneNumberActivity.this, PhoneVerifyActivity.class);
-                        intent.putExtra("phonenumber", number);
+                        intent.putExtra("phonenumber", mPhoneNumber);
                         startActivity(intent);
                     }
                 })
@@ -186,13 +149,6 @@ public class InputPhoneNumberActivity extends AppCompatActivity {
                 });
         AlertDialog dialog = builder.create();
         dialog.show();
-//        Button negativeButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-//        LinearLayout.LayoutParams negativeButtonPosition = (LinearLayout.LayoutParams) negativeButton.getLayoutParams();
-//        negativeButtonPosition.width = ViewGroup.LayoutParams.MATCH_PARENT;
-//        negativeButtonPosition
-//        negativeButtonPosition.weight = 1.0f;
-//        negativeButtonPosition.gravity = Gravity.START;
-//        negativeButton.setLayoutParams(negativeButtonPosition);
     }
 
     @Override
@@ -214,4 +170,34 @@ public class InputPhoneNumberActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_input_phone_number, menu);
         return true;
     }
+
+    private void showProgressDialog() {
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setMessage("Connecting");
+        mProgressDialog.show();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int loading = 0;
+                while (loading < 100) {
+                    try {
+                        Thread.sleep(150);
+                        loading += 20;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                mProgressDialog.dismiss();
+                InputPhoneNumberActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showDialog();
+
+                    }
+                });
+            }
+        }).start();
+    }
+
 }

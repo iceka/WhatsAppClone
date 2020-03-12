@@ -37,6 +37,9 @@ public class EditStatusActivity extends AppCompatActivity {
 
     private Uri imageSource;
 
+    private String imageResourceFromString;
+    private String previousActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,10 +57,20 @@ public class EditStatusActivity extends AppCompatActivity {
         mStatusStorageReference = mFirebaseStorage.getReference().child("status").child(mFirebaseUser.getUid());
 
         imageSource = getIntent().getData();
+        imageResourceFromString = getIntent().getStringExtra("file");
+        previousActivity = getIntent().getStringExtra("from_activity");
 
-        Glide.with(this)
-                .load(imageSource)
-                .into(mImageView);
+        if (imageSource == null) {
+            Glide.with(this)
+                    .load(imageResourceFromString)
+                    .into(mImageView);
+        } else if (imageResourceFromString == null) {
+            Glide.with(this)
+                    .load(imageSource)
+                    .into(mImageView);
+        }
+
+
 
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override

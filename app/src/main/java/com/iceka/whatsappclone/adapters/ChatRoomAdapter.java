@@ -7,10 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -80,10 +83,24 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return chatList.size();
     }
 
-    private void configureViewHolderIncoming(IncomingViewHolder holder, int position) {
+    private void configureViewHolderIncoming(final IncomingViewHolder holder, int position) {
         Chat chat = (Chat) chatList.get(position);
         if (chat != null) {
             holder.message.setText(chat.getMessage());
+            holder.message.post(new Runnable() {
+                @Override
+                public void run() {
+                    int linecount = holder.message.getLineCount();
+                    ConstraintSet constraintSet = new ConstraintSet();
+                    constraintSet.clone(holder.constraintLayout);
+
+                    if (linecount == 1) {
+                        constraintSet.connect(R.id.layout_chat_incoming, ConstraintSet.END, R.id.tv_time_chat_incoming, ConstraintSet.START, 10);
+                        constraintSet.applyTo(holder.constraintLayout);
+                    }
+                    Log.i("MYTAG", "Lines : " + linecount);
+                }
+            });
         }
     }
 
@@ -95,6 +112,13 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public void run() {
                     int linecount = holder.message.getLineCount();
+                    ConstraintSet constraintSet = new ConstraintSet();
+                    constraintSet.clone(holder.constraintLayout);
+
+                    if (linecount == 1) {
+                        constraintSet.connect(R.id.layout_chat, ConstraintSet.END, R.id.tv_time_chat_outgoing, ConstraintSet.START, 10);
+                        constraintSet.applyTo(holder.constraintLayout);
+                    }
                     Log.i("MYTAG", "Lines : " + linecount);
                 }
             });
@@ -103,20 +127,32 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public class IncomingViewHolder extends RecyclerView.ViewHolder {
         private TextView message;
+        private ConstraintLayout constraintLayout;
+        private LinearLayout layout;
+        private TextView time;
 
         public IncomingViewHolder(@NonNull View itemView) {
             super(itemView);
             message = itemView.findViewById(R.id.tv_chat_incoming);
+            constraintLayout = itemView.findViewById(R.id.layout_first_incoming);
+            layout = itemView.findViewById(R.id.layout_chat_incoming);
+            time = itemView.findViewById(R.id.tv_time_chat_incoming);
         }
 
     }
 
     public class OutgoingViewHolder extends RecyclerView.ViewHolder {
         private TextView message;
+        private ConstraintLayout constraintLayout;
+        private LinearLayout layout;
+        private TextView time;
 
         public OutgoingViewHolder(@NonNull View itemView) {
             super(itemView);
             message = itemView.findViewById(R.id.tv_chat_outgoing);
+            constraintLayout = itemView.findViewById(R.id.layout_first);
+            layout = itemView.findViewById(R.id.layout_chat);
+            time = itemView.findViewById(R.id.tv_time_chat_outgoing);
         }
 
 

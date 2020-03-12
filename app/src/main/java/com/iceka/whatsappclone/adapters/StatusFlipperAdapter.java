@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DatabaseReference;
@@ -18,6 +19,7 @@ import com.iceka.whatsappclone.R;
 import com.iceka.whatsappclone.models.StatusItem;
 import com.iceka.whatsappclone.models.Viewed;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StatusFlipperAdapter extends BaseAdapter {
@@ -62,7 +64,7 @@ public class StatusFlipperAdapter extends BaseAdapter {
         StatusItem statusItem = statusItemList.get(i);
 
 
-//        Toast.makeText(view.getContext(), "text : " + statusItem.getText(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(view.getContext(), "text : " + statusItem.getText(), Toast.LENGTH_SHORT).show();
         if (viewedList != null) {
             Log.i("MYTAG", "viewed : " + viewedList.size());
         }
@@ -77,6 +79,12 @@ public class StatusFlipperAdapter extends BaseAdapter {
             text.setVisibility(View.VISIBLE);
             layout.setBackgroundColor(statusItem.getBackgroundColor());
             text.setText(statusItem.getText());
+            List<Viewed> vieweds = new ArrayList<>();
+            if (statusItem.getViewed() != null) {
+                vieweds.add(statusItem.getViewed());
+            }
+            viewCount.setText(String.valueOf(vieweds.size()));
+            Log.i("MYTAG", "gatau : " + statusItem.getText() + " " + vieweds.size());
 //            viewCount.setText(statusItem.getViewed());
         }
 //        StatusText statusText = statusTextList.get(i);
