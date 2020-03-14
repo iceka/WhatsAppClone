@@ -2,11 +2,14 @@ package com.iceka.whatsappclone;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -20,6 +23,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.iceka.whatsappclone.models.StatusItem;
 
+import java.io.ByteArrayOutputStream;
 import java.util.concurrent.TimeUnit;
 
 public class EditStatusActivity extends AppCompatActivity {
@@ -84,6 +88,14 @@ public class EditStatusActivity extends AppCompatActivity {
         final long timestamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
         final long expireTime = timestamp + TimeUnit.MILLISECONDS.convert(1, TimeUnit.MINUTES);
 
+        mImageView.setDrawingCacheEnabled(true);
+        mImageView.buildDrawingCache();
+        Bitmap bitmap = mImageView.getDrawingCache();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        final String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
         final StorageReference mediaReference = mStatusStorageReference.child(imageSource.getLastPathSegment());
         mediaReference.putFile(imageSource).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -92,8 +104,8 @@ public class EditStatusActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Uri uri) {
                         DatabaseReference newRef = mStatusReference.child(mFirebaseUser.getUid()).child("statusItem").push();
-//                        StatusItem statusItem = new StatusItem(newRef.getKey(), "image", uri.toString(), mEditText.getText().toString(), timestamp, expireTime, null);
-//                        newRef.setValue(statusItem);
+                        StatusItem statusItem = new StatusItem(newRef.getKey(), "image", uri.toString(), mEditText.getText().toString(), timestamp, expireTime, encoded, null);
+                        newRef.setValue(statusItem);
                         finish();
                     }
                 });

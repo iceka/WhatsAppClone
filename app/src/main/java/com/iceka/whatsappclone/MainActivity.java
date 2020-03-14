@@ -118,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
                         mFabBottom.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                Toast.makeText(MainActivity.this, "view 1", Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(MainActivity.this, ContactActivity.class));
                             }
                         });
@@ -132,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
                         mFabTop.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-//                                Toast.makeText(MainActivity.this, "clicked", Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(MainActivity.this, StatusTextActivity.class));
                             }
                         });
@@ -227,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.logout:
                 mFirebaseAuth.signOut();
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

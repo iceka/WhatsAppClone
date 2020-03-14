@@ -130,7 +130,6 @@ public class ShowOtherStatusActivity extends AppCompatActivity {
                     mProgressBar[i].getProgress();
                     ViewGroup mViewGroup = findViewById(R.id.parent_progress_bar_layout);
                     mViewGroup.addView(mProgressBar[i]);
-
                     mAdapterViewFlipper.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
                         @Override
                         public void onLayoutChange(final View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
@@ -143,29 +142,22 @@ public class ShowOtherStatusActivity extends AppCompatActivity {
                             DateFormat.format("M/dd/yyyy", calendar);
                             CharSequence now = DateUtils.getRelativeTimeSpanString(co, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS);
                             mDate.setText(now);
-                            if (id.equals(myId)) {
-                                mViewedCount.setVisibility(View.VISIBLE);
-                            } else {
-                                mViewedCount.setVisibility(View.GONE);
-                                long timestamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
-                                final Viewed viewed = new Viewed(myId, timestamp);
-                                Log.i("TAGAYA", "tes : " + statusItem.getId());
-                                mStatusReference.child(id).child("statusItem").child(statusItem.getId()).child("viewed").orderByKey().startAt(myId).endAt(myId).addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        if (!dataSnapshot.exists()) {
-                                            Log.i("TAGAYA", "GAADA CUK");
-                                            mStatusReference.child(id).child("statusItem").child(statusItem.getId()).child("viewed").child(myId).setValue(viewed);
-                                        }
-
+                            long timestamp = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+                            final Viewed viewed = new Viewed(myId, timestamp);
+                            mStatusReference.child(id).child("statusItem").child(statusItem.getId()).child("viewed").orderByKey().startAt(myId).endAt(myId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (!dataSnapshot.exists()) {
+                                        mStatusReference.child(id).child("statusItem").child(statusItem.getId()).child("viewed").child(myId).setValue(viewed);
                                     }
+                                }
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                                    }
-                                });
-                            }
+                                }
+                            });
+
                             if (mAdapterViewFlipper.getDisplayedChild() == mAdapterViewFlipper.getCount() - 1) {
                                 mAdapterViewFlipper.stopFlipping();
                                 animation.addListener(new Animator.AnimatorListener() {
@@ -180,7 +172,6 @@ public class ShowOtherStatusActivity extends AppCompatActivity {
                                                     if (!dataSnapshot.exists()) {
                                                         mStatusReference.child(id).child("allseen").child(myId).setValue(viewed);
                                                     }
-
                                                 }
 
                                                 @Override
@@ -189,8 +180,6 @@ public class ShowOtherStatusActivity extends AppCompatActivity {
                                                 }
                                             });
                                         }
-
-
                                     }
 
                                     @Override
@@ -210,8 +199,6 @@ public class ShowOtherStatusActivity extends AppCompatActivity {
                                 });
                             }
                             animation.start();
-
-
                         }
                     });
                 }
@@ -233,7 +220,6 @@ public class ShowOtherStatusActivity extends AppCompatActivity {
         animation = ObjectAnimator.ofInt(pb, "progress", pb.getProgress(), 100 * 100);
         animation.setDuration(2500);
         animation.setInterpolator(new LinearInterpolator());
-//        animation.start();
     }
 
     private void setMargins(View view) {

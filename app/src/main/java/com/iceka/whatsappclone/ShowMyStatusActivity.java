@@ -41,7 +41,6 @@ public class ShowMyStatusActivity extends AppCompatActivity {
     private TextView mUsername;
     private TextView mTime;
     private ProgressBar[] mProgressBar;
-//    private TextView mSeenCount;
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
@@ -77,25 +76,17 @@ public class ShowMyStatusActivity extends AppCompatActivity {
     }
 
     private void getMyStatus() {
-        final List<Integer> teslist = new ArrayList<>();
         mStatusReference.child(mFirebaseUser.getUid()).child("statusItem").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                teslist.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     StatusItem statusItem = snapshot.getValue(StatusItem.class);
                     statusItemList.add(statusItem);
-                    teslist.add((int) snapshot.child("viewed").getChildrenCount());
-
                     StatusFlipperAdapter adapter = new StatusFlipperAdapter(getApplicationContext(), statusItemList);
                     mAdapterViewFlipper.setAdapter(adapter);
                     mAdapterViewFlipper.setFlipInterval(2500);
                     flipperCount = mAdapterViewFlipper.getCount();
                     mAdapterViewFlipper.startFlipping();
-
-                    List<Viewed> viewedList = new ArrayList<>();
-                    viewedList.add(statusItem.getViewed());
-//                    mSeenCount.setText(String.valueOf(snapshot.child("viewed").getChildrenCount()));
                 }
                 mProgressBar = new ProgressBar[flipperCount];
                 for (int i = 0; i < flipperCount; i++) {
@@ -107,7 +98,6 @@ public class ShowMyStatusActivity extends AppCompatActivity {
                     mProgressBar[i].getProgress();
                     ViewGroup mViewGroup = findViewById(R.id.my_status_parent_progressbar);
                     mViewGroup.addView(mProgressBar[i]);
-
                     mAdapterViewFlipper.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
                         @Override
                         public void onLayoutChange(View view, int i, int i1, int i2, int i3, int i4, int i5, int i6, int i7) {
@@ -154,7 +144,6 @@ public class ShowMyStatusActivity extends AppCompatActivity {
         animation = ObjectAnimator.ofInt(pb, "progress", pb.getProgress(), 100 * 100);
         animation.setDuration(2500);
         animation.setInterpolator(new LinearInterpolator());
-//        animation.start();
     }
 
     private void setMargins(View view) {

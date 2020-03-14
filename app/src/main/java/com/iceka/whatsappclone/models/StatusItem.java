@@ -44,13 +44,14 @@ public class StatusItem {
     }
 
     // For Images
-    public StatusItem(String id, String type, String url, String caption, long timestamp, long expireTime, Viewed viewed) {
+    public StatusItem(String id, String type, String url, String caption, long timestamp, long expireTime, String thumbnail, Viewed viewed) {
         this.id = id;
         this.type = type;
         this.url = url;
         this.caption = caption;
         this.timestamp = timestamp;
         this.expireTime = expireTime;
+        this.thumbnail = thumbnail;
         this.viewed = viewed;
     }
 

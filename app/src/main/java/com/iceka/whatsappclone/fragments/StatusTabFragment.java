@@ -40,13 +40,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.iceka.whatsappclone.CameraActivity;
 import com.iceka.whatsappclone.R;
 import com.iceka.whatsappclone.ShowMyStatusActivity;
-import com.iceka.whatsappclone.StatusTextActivity;
 import com.iceka.whatsappclone.adapters.StatusAdapter;
 import com.iceka.whatsappclone.models.Status;
 import com.iceka.whatsappclone.models.StatusItem;
 import com.iceka.whatsappclone.models.Viewed;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -57,11 +55,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class StatusTabFragment extends Fragment {
 
+    private static final String TAG = "MYTAG";
+    private BroadcastReceiver broadcastReceiver;
     private DatabaseReference mStatusReference;
     private FirebaseUser mFirebaseUser;
-
     private String myId;
-    BroadcastReceiver broadcastReceiver;
 
     private CircleImageView mAvatar;
     private TextView mTimeStatus;
@@ -72,9 +70,6 @@ public class StatusTabFragment extends Fragment {
     private LinearLayout mLayoutRecentStatus;
     private LinearLayout mLayoutViewedStatus;
 
-    private static final String TAG = "MYTAG";
-
-    private List<StatusItem> statusItemList = new ArrayList<>();
     private List<Status> statusList = new ArrayList<>();
     private List<Status> statusListViewed = new ArrayList<>();
     private List<String> viewedList = new ArrayList<>();
@@ -109,6 +104,11 @@ public class StatusTabFragment extends Fragment {
         getViewed();
         checkStatusViewed();
 
+        if (statusList.size() == 0) {
+            mLayoutRecentStatus.setVisibility(View.GONE);
+        }
+
+
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -134,7 +134,6 @@ public class StatusTabFragment extends Fragment {
                             for (DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
                                 Viewed viewed1 = snapshot1.getValue(Viewed.class);
                                 viewedList.add(viewed1.getUid());
-                                Log.i(TAG, "viewed to : " + viewedList);
                             }
                         }
 
@@ -232,7 +231,6 @@ public class StatusTabFragment extends Fragment {
         mStatusReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                statusItemList.clear();
                 statusList.clear();
                 countList.clear();
                 if (dataSnapshot.exists()) {
@@ -242,9 +240,11 @@ public class StatusTabFragment extends Fragment {
                             if (!status.getUid().equals(myId) && status.getStatuscount() > 0) {
                                 countList.add(status.getStatuscount());
                                 statusList.add(status);
+
                             }
                             StatusAdapter adapter = new StatusAdapter(getActivity(), statusList);
                             mRecentStatusRv.setAdapter(adapter);
+
                         }
                     }
 
@@ -277,7 +277,6 @@ public class StatusTabFragment extends Fragment {
                     StatusItem statusItem = snapshot.getValue(StatusItem.class);
                     List<Long> timeList = new ArrayList<>();
                     timeList.add(statusItem.getTimestamp());
-                    Log.i("MYTAG", "KEY : " + dataSnapshot.getKey());
                     for (long tesa : timeList) {
                         tesa = tesa + TimeUnit.MILLISECONDS.convert(3, TimeUnit.HOURS);
                         long timeNow = System.currentTimeMillis();
@@ -317,9 +316,11 @@ public class StatusTabFragment extends Fragment {
     }
 
     private void checkStatusViewed() {
+        statusListViewed.clear();
         mStatusReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                statusListViewed.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     final Status status = snapshot.getValue(Status.class);
                     mStatusReference.child(status.getUid()).child("allseen").addValueEventListener(new ValueEventListener() {
@@ -328,24 +329,30 @@ public class StatusTabFragment extends Fragment {
                             if (dataSnapshot.exists()) {
                                 for (DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
                                     Viewed viewed = snapshot1.getValue(Viewed.class);
-                                    statusListViewed.clear();
                                     if (viewed.getUid().equals(myId)) {
                                         for (int i = 0; i < statusList.size(); i++) {
                                             if (statusList.get(i).getUid().equals(status.getUid())) {
                                                 statusList.remove(i);
                                             }
                                         }
+                                        if (statusList.size() == 0) {
+                                            mLayoutRecentStatus.setVisibility(View.GONE);
+                                        }
                                         statusListViewed.add(status);
                                         StatusAdapter adapter = new StatusAdapter(getActivity(), statusListViewed);
                                         mViewedStatusRv.setAdapter(adapter);
                                     }
-
                                 }
+                                mLayoutViewedStatus.setVisibility(View.VISIBLE);
                             } else {
-                                for (int i = 0; i < statusListViewed.size(); i++) {
-                                    statusListViewed.remove(i);
-                                }
+                                mLayoutViewedStatus.setVisibility(View.GONE);
+//                                statusListViewed.clear();
                             }
+//                            else {
+//                                for (int i = 0; i < statusListViewed.size(); i++) {
+//                                    statusListViewed.remove(i);
+//                                }
+//                            }
 
                         }
 

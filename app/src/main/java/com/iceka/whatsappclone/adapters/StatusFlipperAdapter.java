@@ -64,7 +64,6 @@ public class StatusFlipperAdapter extends BaseAdapter {
         StatusItem statusItem = statusItemList.get(i);
 
 
-        Toast.makeText(view.getContext(), "text : " + statusItem.getText(), Toast.LENGTH_SHORT).show();
         if (viewedList != null) {
             Log.i("MYTAG", "viewed : " + viewedList.size());
         }
@@ -84,25 +83,7 @@ public class StatusFlipperAdapter extends BaseAdapter {
                 vieweds.add(statusItem.getViewed());
             }
             viewCount.setText(String.valueOf(vieweds.size()));
-            Log.i("MYTAG", "gatau : " + statusItem.getText() + " " + vieweds.size());
-//            viewCount.setText(statusItem.getViewed());
         }
-//        StatusText statusText = statusTextList.get(i);
-//        Toast.makeText(mContext, "posisi : " + statusText.getText(), Toast.LENGTH_SHORT).show();
-//        Log.i("MyTag","text : " + statusText.getText());
-//        RelativeLayout layout = view.findViewById(R.id.layout_item_status_text);
-//        TextView text = view.findViewById(R.id.tv_text_item_status);
-//        layout.setBackgroundColor(statusText.getBackgroundColor());
-//        text.setText(statusText.getText());
-//        mProgressBar = new ProgressBar[statusTextList.size()];
-//        for (int e = 0; i < statusTextList.size(); e++) {
-//            mProgressBar[e] = new ProgressBar(mContext, null, android.R.attr.progressBarStyleHorizontal);
-//            mProgressBar[e].setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-//
-//            mProgressBar[e].getProgress();
-//            ViewGroup mViewGroup = view.findViewById(R.id.parent_progress_bar_layout);
-//            mViewGroup.addView(mProgressBar[e]);
-//        }
 
         return view;
     }
